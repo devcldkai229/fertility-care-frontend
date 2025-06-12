@@ -1,0 +1,123 @@
+import {
+  CreditCardIcon,
+  DocumentTextIcon,
+  CalendarIcon,
+} from "@heroicons/react/24/outline";
+import type { IVFStep } from "../model/ivf-types";
+
+import { AppointmentList } from "../components/AppointmentList";
+import { EggDataCard } from "../components/EggDataCard";
+import { EmbryoDataCard } from "../components/EmbryoDataCard";
+
+interface StepDetailProps {
+  step: IVFStep | null;
+}
+
+export function StepDetail({ step }: StepDetailProps) {
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
+
+  if (!step) {
+    return (
+      <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg rounded-lg">
+        <div className="p-8 text-center">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <CalendarIcon className="w-8 h-8 text-gray-400" />
+          </div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            Chọn một bước
+          </h3>
+          <p className="text-gray-600">
+            Nhấp vào bất kỳ bước nào bên trái để xem chi tiết, lịch hẹn và ghi
+            chú của bác sĩ.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Step Details */}
+      <div className="bg-white/90 backdrop-blur-sm border-0 shadow-lg rounded-lg">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <div className="flex items-center gap-3">
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                step.status === "completed"
+                  ? "bg-green-500 text-white"
+                  : step.status === "active"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              {step.icon}
+            </div>
+            <div>
+              <div className="text-lg font-semibold">{step.title}</div>
+              <div className="text-sm text-gray-500">Bước {step.id}</div>
+            </div>
+          </div>
+        </div>
+        <div className="p-6 space-y-4">
+          <p className="text-gray-600">{step.description}</p>
+
+          {step.doctorNotes && (
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <DocumentTextIcon className="w-4 h-4 text-blue-600" />
+                <span className="font-medium text-blue-900">
+                  Ghi chú của bác sĩ
+                </span>
+              </div>
+              <p className="text-blue-800 text-sm">{step.doctorNotes}</p>
+            </div>
+          )}
+
+          <hr className="border-gray-200" />
+
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-gray-600">Chi phí:</span>
+              <span className="font-semibold">{formatCurrency(step.cost)}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-600">Trạng thái thanh toán:</span>
+              {step.paid ? (
+                <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                  Đã thanh toán
+                </span>
+              ) : (
+                <span className="inline-flex items-center rounded-full border border-orange-300 px-2.5 py-0.5 text-xs font-medium text-orange-600">
+                  Chưa thanh toán
+                </span>
+              )}
+            </div>
+          </div>
+
+          {!step.paid && (
+            <button className="w-full inline-flex items-center justify-center rounded-md bg-gradient-to-r from-pink-500 to-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:from-pink-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors">
+              <CreditCardIcon className="w-4 h-4 mr-2" />
+              Thanh toán ngay
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Appointments */}
+      <AppointmentList appointments={step.appointments} />
+
+      {/* Egg Data Card - Step 3 */}
+      {step.id === 3 && step.eggData && <EggDataCard eggData={step.eggData} />}
+
+      {/* Embryo Data Card - Step 4 */}
+      {step.id === 4 && step.embryoData && (
+        <EmbryoDataCard embryoData={step.embryoData} />
+      )}
+    </div>
+  );
+}

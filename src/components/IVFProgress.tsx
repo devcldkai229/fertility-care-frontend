@@ -1,24 +1,24 @@
 "use client";
-
+import "../assets/css/StylePatientProcess.css";
 import { useState } from "react";
 import { HeartIcon, Bars3Icon } from "@heroicons/react/24/solid";
-import { IVFSidebar } from "./IVFSidebar";
-import { ProgressTracker } from "./ProgressTracker";
-import { StepCard } from "./StepCard";
-import { StepDetail } from "./StepDetail";
+import { IVFSidebar } from "../components/IVFSidebar";
+import { ProgressTracker } from "../components/ProgressTracker";
+import { StepCard } from "../components/StepCard";
+import { StepDetail } from "../components/StepDetail";
 import type { IVFStep } from "../model/ivf-types";
 
-interface IVFProgressProps {
+interface IVFProgressPageProps {
   steps: IVFStep[];
   patientName: string;
   patientDOB: string;
 }
 
-export default function IVFProgress({
+export default function IVFProgressPage({
   steps,
   patientName,
   patientDOB,
-}: IVFProgressProps) {
+}: IVFProgressPageProps) {
   const [selectedStep, setSelectedStep] = useState<IVFStep | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
