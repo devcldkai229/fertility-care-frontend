@@ -2,18 +2,12 @@
 
 import { FaClock } from "react-icons/fa"
 import { CalendarIcon } from "@heroicons/react/24/outline"
+import type { Doctor } from "../models/Doctor"
+import { ConvertFullName } from "../functions/CommonFunction"
+import { IUI_ID } from "../constants/ApplicationConstant"
 
-interface Doctor {
-  id: string
-  name: string
-  specialty: string
-  experience: string
-  rating: number
-  avatar: string
-  availableDays: string[]
-}
 
-interface Step4Props {
+interface PartProps {
   selectedDoctor: Doctor | null
   selectedTreatment: string
   selectedDate: string
@@ -28,8 +22,8 @@ interface Step4Props {
   onConfirmBooking: () => void
   isCompleted: boolean
 }
-
-export default function Step4Scheduling({
+ 
+export default function PartFourBooking ({
   selectedDoctor,
   selectedTreatment,
   selectedDate,
@@ -43,7 +37,8 @@ export default function Step4Scheduling({
   onConsentChange,
   onConfirmBooking,
   isCompleted,
-}: Step4Props) {
+}: PartProps) {
+
   return (
     <section id="schedule" className="scroll-mt-20">
       <div className="max-w-4xl mx-auto">
@@ -56,8 +51,8 @@ export default function Step4Scheduling({
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                   <img
-                    src={selectedDoctor.avatar || "/placeholder.svg?height=48&width=48"}
-                    alt={selectedDoctor.name}
+                    src={selectedDoctor.profile.avatarUrl || "/placeholder.svg?height=48&width=48"}
+                    alt={ConvertFullName(selectedDoctor.profile)}
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
@@ -65,36 +60,14 @@ export default function Step4Scheduling({
                       target.nextElementSibling!.classList.remove("hidden")
                     }}
                   />
-                  <div className="hidden w-full h-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold text-sm">
-                    {selectedDoctor.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </div>
                 </div>
                 <div>
-                  <p className="font-semibold">{selectedDoctor.name}</p>
-                  <p className="text-blue-600 text-sm">{selectedTreatment.toUpperCase()} Treatment</p>
+                  <p className="font-semibold">{ConvertFullName(selectedDoctor.profile)}</p>
+                  <p className="text-blue-600 text-sm">{selectedTreatment === IUI_ID ? "IUI" : "IVF"} Treatment</p>
                 </div>
               </div>
             ) : (
               <p className="text-gray-500">Please select a doctor first</p>
-            )}
-
-            {selectedDoctor && (
-              <div className="mt-6">
-                <h4 className="font-semibold mb-2">Available Days</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedDoctor.availableDays.map((day) => (
-                    <span
-                      key={day}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                    >
-                      {day}
-                    </span>
-                  ))}
-                </div>
-              </div>
             )}
           </div>
 
@@ -170,20 +143,6 @@ export default function Step4Scheduling({
             </a>
             .
           </label>
-        </div>
-
-        <div className="flex justify-center mt-8">
-          <button
-            disabled={!isCompleted}
-            onClick={onConfirmBooking}
-            className={`px-8 py-3 rounded-md font-medium transition-colors duration-200 ${
-              !isCompleted
-                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                : "bg-green-600 hover:bg-green-700 text-white"
-            }`}
-          >
-            Confirm Booking ✓
-          </button>
         </div>
       </div>
     </section>

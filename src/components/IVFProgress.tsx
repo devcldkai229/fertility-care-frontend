@@ -6,7 +6,7 @@ import { IVFSidebar } from "../components/IVFSidebar";
 import { ProgressTracker } from "../components/ProgressTracker";
 import { StepCard } from "../components/StepCard";
 import { StepDetail } from "../components/StepDetail";
-import type { IVFStep } from "../model/ivf-types";
+import type { IVFStep } from "../models/ivf-types";
 
 interface IVFProgressPageProps {
   steps: IVFStep[];
