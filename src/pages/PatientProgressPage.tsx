@@ -1,6 +1,9 @@
 "use client";
+import Footer from "../components/Footer";
 import IVFProgress from "../components/IVFProgress";
 import type { IVFStep } from "../model/ivf-types";
+import Header from "../components/Header";
+
 import {
   DocumentTextIcon,
   SparklesIcon,
@@ -188,10 +191,14 @@ const ivfSteps: IVFStep[] = [
 
 export default function PatientProgressPage() {
   return (
-    <IVFProgress
-      steps={ivfSteps}
-      patientName="Lê Thị Hương"
-      patientDOB="2000/01/01"
-    />
+    <>
+      <IVFProgress
+        steps={ivfSteps}
+        patientName="Lê Thị Hương"
+        patientDOB="2000/01/01"
+      />
+
+      <Footer />
+    </>
   );
 }
