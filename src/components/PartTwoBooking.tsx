@@ -1,25 +1,16 @@
 "use client"
 
 import { FaArrowRight } from "react-icons/fa"
+import type PersonalInfo from "../models/PersonalInfo"
 
-interface PersonalInfo {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  dateOfBirth: string
-  gender: string
-  medicalHistory: string
-}
-
-interface Step2Props {
-  personalInfo: PersonalInfo
+interface PartProps {
+  personal: PersonalInfo
   onPersonalInfoChange: (field: string, value: string) => void
   onNext: () => void
   isCompleted: boolean
 }
 
-export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, onNext, isCompleted }: Step2Props) {
+export default function PartTwoBooking ({ personal, onPersonalInfoChange, onNext, isCompleted }: PartProps) {
   return (
     <section id="personal-info" className="scroll-mt-20">
       <div className="max-w-2xl mx-auto">
@@ -34,11 +25,26 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
               <input
                 id="firstName"
                 type="text"
-                value={personalInfo.firstName}
+                value={personal.firstName}
                 onChange={(e) => onPersonalInfoChange("firstName", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
+            <div>
+              <label htmlFor="middleName" className="block text-sm font-medium text-gray-700 mb-1">
+                Middle Name
+              </label>
+              <input
+                id="middleName"
+                type="text"
+                value={personal.lastName}
+                onChange={(e) => onPersonalInfoChange("middleName", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
                 Last Name
@@ -46,14 +52,11 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
               <input
                 id="lastName"
                 type="text"
-                value={personalInfo.lastName}
+                value={personal.lastName}
                 onChange={(e) => onPersonalInfoChange("lastName", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
@@ -61,20 +64,8 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
               <input
                 id="email"
                 type="email"
-                value={personalInfo.email}
+                value={personal.email}
                 onChange={(e) => onPersonalInfoChange("email", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
-              </label>
-              <input
-                id="phone"
-                type="tel"
-                value={personalInfo.phone}
-                onChange={(e) => onPersonalInfoChange("phone", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -82,17 +73,32 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
+              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
+              <input
+                id="phone"
+                type="tel"
+                value={personal.phone}
+                onChange={(e) => onPersonalInfoChange("phone", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
               <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700 mb-1">
                 Date of Birth
               </label>
               <input
                 id="dateOfBirth"
                 type="date"
-                value={personalInfo.dateOfBirth}
+                value={personal.dateOfBirth}
                 onChange={(e) => onPersonalInfoChange("dateOfBirth", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
               <div className="flex space-x-6">
@@ -102,7 +108,7 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
                     name="gender"
                     type="radio"
                     value="female"
-                    checked={personalInfo.gender === "female"}
+                    checked={personal.gender === "female"}
                     onChange={(e) => onPersonalInfoChange("gender", e.target.value)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                   />
@@ -116,7 +122,7 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
                     name="gender"
                     type="radio"
                     value="male"
-                    checked={personalInfo.gender === "male"}
+                    checked={personal.gender === "male"}
                     onChange={(e) => onPersonalInfoChange("gender", e.target.value)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                   />
@@ -130,7 +136,7 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
                     name="gender"
                     type="radio"
                     value="other"
-                    checked={personalInfo.gender === "other"}
+                    checked={personal.gender === "other"}
                     onChange={(e) => onPersonalInfoChange("gender", e.target.value)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                   />
@@ -140,6 +146,7 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
                 </div>
               </div>
             </div>
+            <div></div>
           </div>
 
           <div>
@@ -149,7 +156,7 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
             <textarea
               id="medicalHistory"
               rows={4}
-              value={personalInfo.medicalHistory}
+              value={personal.medicalHistory}
               onChange={(e) => onPersonalInfoChange("medicalHistory", e.target.value)}
               placeholder="Please provide any relevant medical history..."
               className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -163,7 +170,7 @@ export default function Step2PersonalInfo({ personalInfo, onPersonalInfoChange, 
               onClick={onNext}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors duration-200 flex items-center"
             >
-              Continue to Doctor Selection
+              Continue
               <FaArrowRight className="ml-2 w-4 h-4" />
             </button>
           </div>

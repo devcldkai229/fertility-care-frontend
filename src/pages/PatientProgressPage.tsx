@@ -1,8 +1,7 @@
 "use client";
 import Footer from "../components/Footer";
 import IVFProgress from "../components/IVFProgress";
-import type { IVFStep } from "../model/ivf-types";
-import Header from "../components/Header";
+import type { IVFStep } from "../models/ivf-types";
 
 import {
   DocumentTextIcon,

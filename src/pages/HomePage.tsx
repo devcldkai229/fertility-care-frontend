@@ -17,7 +17,7 @@ import {
   EnvelopeIcon,
 } from "@heroicons/react/24/outline";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <>
       {/* // Header component */}

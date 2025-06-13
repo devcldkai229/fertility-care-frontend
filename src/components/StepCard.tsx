@@ -6,7 +6,8 @@ import {
   CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import type { IVFStep } from "../model/ivf-types";
+import type { IVFStep } from "../models/ivf-types";
+import { STEP_COMPLETED, STEP_PROGRESS } from "../constants/StepStatus";
 
 interface StepCardProps {
   step: IVFStep;
@@ -24,13 +25,13 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "completed":
+      case STEP_COMPLETED:
         return (
           <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
             Hoàn thành
           </span>
         );
-      case "active":
+      case STEP_PROGRESS:
         return (
           <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
             Đang thực hiện

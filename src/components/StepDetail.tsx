@@ -3,7 +3,7 @@ import {
   DocumentTextIcon,
   CalendarIcon,
 } from "@heroicons/react/24/outline";
-import type { IVFStep } from "../model/ivf-types";
+import type { IVFStep } from "../models/ivf-types";
 
 import { AppointmentList } from "../components/AppointmentList";
 import { EggDataCard } from "../components/EggDataCard";

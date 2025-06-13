@@ -1,0 +1,6 @@
+
+
+export const IUI_ID: string = "EB9D841C-9CAA-44F0-AEBB-7350D24793F4" 
+
+export const IVF_ID: string = "CC0BF0C3-07D1-42D3-9BF2-EE7C4F807B45"
+

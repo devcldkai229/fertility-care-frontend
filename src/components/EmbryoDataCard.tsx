@@ -1,5 +1,5 @@
 import { BeakerIcon } from "@heroicons/react/24/outline";
-import type { EmbryoData } from "../model/ivf-types";
+import type { EmbryoData } from "../models/ivf-types";
 
 interface EmbryoDataCardProps {
   embryoData: EmbryoData;

@@ -1,18 +1,12 @@
 "use client"
 
 import { FaStar, FaArrowRight } from "react-icons/fa"
+import type { Doctor } from "../models/Doctor"
+import { ConvertFullName } from "../functions/CommonFunction"
 
-interface Doctor {
-  id: string
-  name: string
-  specialty: string
-  experience: string
-  rating: number
-  avatar: string
-  availableDays: string[]
-}
 
-interface Step3Props {
+
+interface PartProps {
   doctors: Doctor[]
   selectedDoctor: Doctor | null
   onDoctorSelect: (doctor: Doctor) => void
@@ -20,13 +14,15 @@ interface Step3Props {
   isCompleted: boolean
 }
 
-export default function Step3DoctorSelection({
+export default function PartThreeBooking ({
   doctors,
   selectedDoctor,
   onDoctorSelect,
   onNext,
   isCompleted,
-}: Step3Props) {
+
+}: PartProps) {
+
   return (
     <section id="select-doctor" className="scroll-mt-20">
       <div className="max-w-4xl mx-auto">
@@ -49,8 +45,8 @@ export default function Step3DoctorSelection({
               <div className="flex items-start space-x-4">
                 <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                   <img
-                    src={doctor.avatar || "/placeholder.svg?height=64&width=64"}
-                    alt={doctor.name}
+                    src={doctor.profile.avatarUrl || "/placeholder.svg?height=64&width=64"}
+                    alt={doctor.profile.lastName}
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement
@@ -58,43 +54,25 @@ export default function Step3DoctorSelection({
                       target.nextElementSibling!.classList.remove("hidden")
                     }}
                   />
-                  <div className="hidden w-full h-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold">
-                    {doctor.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </div>
                 </div>
 
                 <div className="flex-1">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900">{doctor.name}</h3>
-                      <p className="text-blue-600 font-medium">{doctor.specialty}</p>
-                      <p className="text-gray-600 mt-1">{doctor.experience}</p>
+                      <h3 className="text-xl font-semibold text-gray-900">Dr.{ConvertFullName(doctor.profile)}</h3>
+                      <p className="text-blue-600 font-medium">{doctor.specialization}</p>
+                      <p className="text-gray-600 mt-1">{doctor.yearsOfExperience}</p>
                     </div>
                     <div className="flex items-center">
                       <FaStar className="w-4 h-4 text-yellow-400" />
                       <span className="ml-1 font-semibold">{doctor.rating}</span>
                     </div>
                   </div>
-
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    {doctor.availableDays.map((day) => (
-                      <span
-                        key={day}
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                      >
-                        {day}
-                      </span>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
-
         {isCompleted && (
           <div className="flex justify-center mt-8">
             <button
