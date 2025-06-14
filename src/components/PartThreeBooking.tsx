@@ -1,39 +1,38 @@
-"use client"
+"use client";
 
-import { FaStar, FaArrowRight } from "react-icons/fa"
-import type { Doctor } from "../models/Doctor"
-import { ConvertFullName } from "../functions/CommonFunction"
-
-
+import { FaStar, FaArrowRight } from "react-icons/fa";
+import type { Doctor } from "../models/Doctor";
+import { ConvertFullName } from "../functions/CommonFunction";
 
 interface PartProps {
-  doctors: Doctor[]
-  selectedDoctor: Doctor | null
-  onDoctorSelect: (doctor: Doctor) => void
-  onNext: () => void
-  isCompleted: boolean
+  doctors: Doctor[];
+  selectedDoctor: Doctor | null;
+  onDoctorSelect: (doctor: Doctor) => void;
+  onNext: () => void;
+  isCompleted: boolean;
 }
 
-export default function PartThreeBooking ({
+export default function PartThreeBooking({
   doctors,
   selectedDoctor,
   onDoctorSelect,
   onNext,
   isCompleted,
-
 }: PartProps) {
-
   return (
-    <section id="select-doctor" className="scroll-mt-20">
+    <section id="select-doctor" className="scroll-mt-20 py-20 ">
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Select Your Fertility Specialist</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            Select Your Fertility Specialist
+          </h2>
           <p className="text-lg text-gray-600">
-            Our specialists have extensive experience in treatments. Select the doctor you'd like to consult with.
+            Our specialists have extensive experience in treatments. Select the
+            doctor you'd like to consult with.
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-6 shadow-lg border border-gray-100 rounded-lg p-6 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {doctors.map((doctor) => (
             <div
               key={doctor.id}
@@ -45,7 +44,10 @@ export default function PartThreeBooking ({
               <div className="flex items-start space-x-4">
                 <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                   <img
-                    src={doctor.profile.avatarUrl || "/placeholder.svg?height=64&width=64"}
+                    src={
+                      doctor.profile.avatarUrl ||
+                      "/placeholder.svg?height=64&width=64"
+                    }
                     alt={doctor.profile.lastName}
                     className="w-full h-full object-cover"
                   />
@@ -54,13 +56,21 @@ export default function PartThreeBooking ({
                 <div className="flex-1">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-900">Dr.{ConvertFullName(doctor.profile)}</h3>
-                      <p className="text-blue-600 font-medium">{doctor.specialization}</p>
-                      <p className="text-gray-600 mt-1">{doctor.yearsOfExperience} years of experience</p>
+                      <h3 className="text-xl font-semibold text-gray-900">
+                        Dr.{ConvertFullName(doctor.profile)}
+                      </h3>
+                      <p className="text-blue-600 font-medium">
+                        {doctor.specialization}
+                      </p>
+                      <p className="text-gray-600 mt-1">
+                        {doctor.yearsOfExperience} years of experience
+                      </p>
                     </div>
                     <div className="flex items-center">
                       <FaStar className="w-4 h-4 text-yellow-400" />
-                      <span className="ml-1 font-semibold">{doctor.rating}</span>
+                      <span className="ml-1 font-semibold">
+                        {doctor.rating}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -81,5 +91,5 @@ export default function PartThreeBooking ({
         )}
       </div>
     </section>
-  )
+  );
 }

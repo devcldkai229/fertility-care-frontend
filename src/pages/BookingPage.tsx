@@ -72,13 +72,6 @@ export const handleBookingForm = async (
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error("Lỗi API:", error.response?.data || error.message);
-
-      Swal.fire({
-        title: "Lỗi!",
-        text: error.response?.data?.message || "Có lỗi xảy ra khi đặt lịch.",
-        icon: "error",
-        confirmButtonText: "Thử lại",
-      });
     } else {
       console.error("Lỗi không xác định:", error);
 
@@ -380,7 +373,10 @@ export default function BookingPage() {
               />
 
               <div className="flex justify-center mt-8">
-                <button type="submit" className="btn btn-primary">
+                <button
+                  type="submit"
+                  className="bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-12 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                >
                   Submit
                 </button>
               </div>

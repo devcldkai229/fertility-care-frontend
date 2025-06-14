@@ -1,30 +1,29 @@
-"use client"
+"use client";
 
-import { FaClock } from "react-icons/fa"
-import { CalendarIcon } from "@heroicons/react/24/outline"
-import type { Doctor } from "../models/Doctor"
-import { ConvertFullName, ConvertSlotTime } from "../functions/CommonFunction"
-import { IUI_ID } from "../constants/ApplicationConstant"
-import type { SlotSchedule } from "../models/SlotSchedule"
-
+import { FaClock } from "react-icons/fa";
+import { CalendarIcon } from "@heroicons/react/24/outline";
+import type { Doctor } from "../models/Doctor";
+import { ConvertFullName, ConvertSlotTime } from "../functions/CommonFunction";
+import { IUI_ID } from "../constants/ApplicationConstant";
+import type { SlotSchedule } from "../models/SlotSchedule";
 
 interface PartProps {
-  selectedDoctor: Doctor | null
-  selectedTreatment: string
-  selectedDate: string
-  selectedTime: string
-  specialRequests: string
-  consentGiven: boolean
-  timeSlots: SlotSchedule[]
-  onDateChange: (date: string) => void
-  onTimeChange: (time: string) => void
-  onSpecialRequestsChange: (requests: string) => void
-  onConsentChange: (consent: boolean) => void
-  isCompleted: boolean
-  onScheduleIdChange: (scheduleId: number) => void
+  selectedDoctor: Doctor | null;
+  selectedTreatment: string;
+  selectedDate: string;
+  selectedTime: string;
+  specialRequests: string;
+  consentGiven: boolean;
+  timeSlots: SlotSchedule[];
+  onDateChange: (date: string) => void;
+  onTimeChange: (time: string) => void;
+  onSpecialRequestsChange: (requests: string) => void;
+  onConsentChange: (consent: boolean) => void;
+  isCompleted: boolean;
+  onScheduleIdChange: (scheduleId: number) => void;
 }
- 
-export default function PartFourBooking ({
+
+export default function PartFourBooking({
   selectedDoctor,
   selectedTreatment,
   selectedDate,
@@ -36,30 +35,40 @@ export default function PartFourBooking ({
   onTimeChange,
   onSpecialRequestsChange,
   onConsentChange,
-  onScheduleIdChange, 
+  onScheduleIdChange,
   isCompleted,
 }: PartProps) {
-
   return (
     <section id="schedule" className="scroll-mt-20">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">Schedule Your Appointment</h2>
+        <h2 className="text-3xl font-bold text-gray-900 mb-8">
+          Schedule Your Appointment
+        </h2>
 
         <div className="grid md:grid-cols-2 gap-8">
           <div className="bg-white rounded-lg shadow-md border p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Selected Doctor</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Selected Doctor
+            </h3>
             {selectedDoctor ? (
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                   <img
-                    src={selectedDoctor.profile.avatarUrl || "/placeholder.svg?height=48&width=48"}
+                    src={
+                      selectedDoctor.profile.avatarUrl ||
+                      "/placeholder.svg?height=48&width=48"
+                    }
                     alt={ConvertFullName(selectedDoctor.profile)}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div>
-                  <p className="font-semibold">{ConvertFullName(selectedDoctor.profile)}</p>
-                  <p className="text-blue-600 text-sm">{selectedTreatment === IUI_ID ? "IUI" : "IVF"} Treatment</p>
+                  <p className="font-semibold">
+                    {ConvertFullName(selectedDoctor.profile)}
+                  </p>
+                  <p className="text-blue-600 text-sm">
+                    {selectedTreatment === IUI_ID ? "IUI" : "IVF"} Treatment
+                  </p>
                 </div>
               </div>
             ) : (
@@ -69,7 +78,10 @@ export default function PartFourBooking ({
 
           <div className="space-y-6">
             <div>
-              <label htmlFor="appointmentDate" className="block text-sm font-medium text-gray-700 mb-1">
+              <label
+                htmlFor="appointmentDate"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
                 Select Date
               </label>
               <div className="relative">
@@ -85,16 +97,18 @@ export default function PartFourBooking ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Available Time Slots</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Available Time Slots
+              </label>
               {selectedDate ? (
                 <div className="grid grid-cols-3 gap-2">
                   {timeSlots.map((slot) => (
                     <button
                       key={slot.slotId}
                       onClick={() => {
-                        onTimeChange(ConvertSlotTime(slot))
-                        onScheduleIdChange(slot.scheduleId)
-                    }}
+                        onTimeChange(ConvertSlotTime(slot));
+                        onScheduleIdChange(slot.scheduleId);
+                      }}
                       className={`flex items-center justify-center px-3 py-2 text-xs font-medium rounded-md border transition-colors duration-200 ${
                         selectedTime === ConvertSlotTime(slot)
                           ? "bg-blue-600 text-white border-blue-600"
@@ -114,7 +128,10 @@ export default function PartFourBooking ({
         </div>
 
         <div className="mt-8">
-          <label htmlFor="specialRequests" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="specialRequests"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Special Requests (Optional)
           </label>
           <textarea
@@ -136,15 +153,15 @@ export default function PartFourBooking ({
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
           <label htmlFor="consent" className="text-sm text-gray-700">
-            I consent to the processing of my personal data for the purpose of this appointment and agree to the{" "}
+            I consent to the processing of my personal data for the purpose of
+            this appointment and agree to the{" "}
             <a href="#" className="text-blue-600 underline">
               Terms of Service
             </a>
-            
           </label>
           {isCompleted}
         </div>
       </div>
     </section>
-  )
+  );
 }

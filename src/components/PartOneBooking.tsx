@@ -11,13 +11,12 @@ interface PartProps {
   isCompleted: boolean;
 }
 
-export default function PartOneBooking ({
+export default function PartOneBooking({
   selectedTreatment,
   onTreatmentSelect,
   onNext,
   isCompleted,
 }: PartProps) {
-
   return (
     <div id="treatment-type" className="scroll-mt-20">
       <div className="max-w-4xl mx-auto">
