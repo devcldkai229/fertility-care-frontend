@@ -1,17 +1,16 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import StepIndicator from "../components/StepIndicator"
-import PartThreeBooking from "../components/PartThreeBooking"
-import { FaFlask, FaUser, FaHeart } from "react-icons/fa"
-import Header from "../components/Header"
-import PartOneBooking from "../components/PartOneBooking"
-import PartTwoBooking from "../components/PartTwoBooking"
-import PartFourBooking from "../components/PartFourBooking"
-import type { Doctor } from "../models/Doctor"
-import type PersonalInfo from "../models/PersonalInfo"
-import { getDoctors } from "../apis/DoctorService"
-
+import { useEffect, useState } from "react";
+import StepIndicator from "../components/StepIndicator";
+import PartThreeBooking from "../components/PartThreeBooking";
+import { FaFlask, FaUser, FaHeart } from "react-icons/fa";
+import Header from "../components/Header";
+import PartOneBooking from "../components/PartOneBooking";
+import PartTwoBooking from "../components/PartTwoBooking";
+import PartFourBooking from "../components/PartFourBooking";
+import type { Doctor } from "../models/Doctor";
+import type PersonalInfo from "../models/PersonalInfo";
+import { getDoctors } from "../apis/DoctorService";
 
 export default function BookingPage() {
 
