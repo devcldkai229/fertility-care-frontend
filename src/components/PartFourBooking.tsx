@@ -3,8 +3,9 @@
 import { FaClock } from "react-icons/fa"
 import { CalendarIcon } from "@heroicons/react/24/outline"
 import type { Doctor } from "../models/Doctor"
-import { ConvertFullName } from "../functions/CommonFunction"
+import { ConvertFullName, ConvertSlotTime } from "../functions/CommonFunction"
 import { IUI_ID } from "../constants/ApplicationConstant"
+import type { SlotSchedule } from "../models/SlotSchedule"
 
 
 interface PartProps {
@@ -14,13 +15,13 @@ interface PartProps {
   selectedTime: string
   specialRequests: string
   consentGiven: boolean
-  timeSlots: string[]
+  timeSlots: SlotSchedule[]
   onDateChange: (date: string) => void
   onTimeChange: (time: string) => void
   onSpecialRequestsChange: (requests: string) => void
   onConsentChange: (consent: boolean) => void
-  onConfirmBooking: () => void
   isCompleted: boolean
+  onScheduleIdChange: (scheduleId: number) => void
 }
  
 export default function PartFourBooking ({
@@ -35,7 +36,7 @@ export default function PartFourBooking ({
   onTimeChange,
   onSpecialRequestsChange,
   onConsentChange,
-  onConfirmBooking,
+  onScheduleIdChange, 
   isCompleted,
 }: PartProps) {
 
@@ -54,11 +55,6 @@ export default function PartFourBooking ({
                     src={selectedDoctor.profile.avatarUrl || "/placeholder.svg?height=48&width=48"}
                     alt={ConvertFullName(selectedDoctor.profile)}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.style.display = "none"
-                      target.nextElementSibling!.classList.remove("hidden")
-                    }}
                   />
                 </div>
                 <div>
@@ -92,18 +88,21 @@ export default function PartFourBooking ({
               <label className="block text-sm font-medium text-gray-700 mb-2">Available Time Slots</label>
               {selectedDate ? (
                 <div className="grid grid-cols-3 gap-2">
-                  {timeSlots.map((time) => (
+                  {timeSlots.map((slot) => (
                     <button
-                      key={time}
-                      onClick={() => onTimeChange(time)}
+                      key={slot.slotId}
+                      onClick={() => {
+                        onTimeChange(ConvertSlotTime(slot))
+                        onScheduleIdChange(slot.scheduleId)
+                    }}
                       className={`flex items-center justify-center px-3 py-2 text-xs font-medium rounded-md border transition-colors duration-200 ${
-                        selectedTime === time
+                        selectedTime === ConvertSlotTime(slot)
                           ? "bg-blue-600 text-white border-blue-600"
                           : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
                       }`}
                     >
                       <FaClock className="w-3 h-3 mr-1" />
-                      {time}
+                      {ConvertSlotTime(slot)}
                     </button>
                   ))}
                 </div>
@@ -141,8 +140,9 @@ export default function PartFourBooking ({
             <a href="#" className="text-blue-600 underline">
               Terms of Service
             </a>
-            .
+            
           </label>
+          {isCompleted}
         </div>
       </div>
     </section>

@@ -1,13 +1,11 @@
 import axios from "axios";
-import type { Doctor } from "../models/Doctor";
-import type { ApiResponse } from "../models/StandardResponse";
 
 export const getDoctors = async (
   Page: number = 1,
-  PageSize: number = 100
-): Promise<Doctor[]> => {
-  const response = await axios.get<ApiResponse<Doctor[]>>(
-    "http://localhost:7201/api/v1/doctors",
+  PageSize: number = 3
+) => {
+  const response = await axios.get(
+    "https://localhost:7201/api/v1/doctors",
     {
       params: {
         Page,
@@ -15,11 +13,25 @@ export const getDoctors = async (
       },
     }
   );
-
   return response.data.data;
 };
 
 
+export const getScheduleSlotTime = async (
+  doctorId: string,
+  date: string
+) => {
+  const response = await axios.get(
+    `https://localhost:7201/api/v1/doctor-schedules/slots/${doctorId}`,
+    {
+      params: {
+        date
+      }
+    }
+  );
+
+  return response.data.data;
+};
 
 
 
