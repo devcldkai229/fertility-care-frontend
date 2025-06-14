@@ -48,11 +48,6 @@ export default function PartThreeBooking ({
                     src={doctor.profile.avatarUrl || "/placeholder.svg?height=64&width=64"}
                     alt={doctor.profile.lastName}
                     className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement
-                      target.style.display = "none"
-                      target.nextElementSibling!.classList.remove("hidden")
-                    }}
                   />
                 </div>
 
@@ -61,7 +56,7 @@ export default function PartThreeBooking ({
                     <div>
                       <h3 className="text-xl font-semibold text-gray-900">Dr.{ConvertFullName(doctor.profile)}</h3>
                       <p className="text-blue-600 font-medium">{doctor.specialization}</p>
-                      <p className="text-gray-600 mt-1">{doctor.yearsOfExperience}</p>
+                      <p className="text-gray-600 mt-1">{doctor.yearsOfExperience} years of experience</p>
                     </div>
                     <div className="flex items-center">
                       <FaStar className="w-4 h-4 text-yellow-400" />
@@ -79,7 +74,7 @@ export default function PartThreeBooking ({
               onClick={onNext}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors duration-200 flex items-center"
             >
-              Continue to Scheduling
+              Continue
               <FaArrowRight className="ml-2 w-4 h-4" />
             </button>
           </div>

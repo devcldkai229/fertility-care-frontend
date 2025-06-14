@@ -37,7 +37,7 @@ export default function PartTwoBooking ({ personal, onPersonalInfoChange, onNext
               <input
                 id="middleName"
                 type="text"
-                value={personal.lastName}
+                value={personal.middleName}
                 onChange={(e) => onPersonalInfoChange("middleName", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
@@ -100,6 +100,45 @@ export default function PartTwoBooking ({ personal, onPersonalInfoChange, onNext
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
+              <label htmlFor="partnerName" className="block text-sm font-medium text-gray-700 mb-1">
+                Partner Name
+              </label>
+              <input
+                id="partnerName"
+                type="text"
+                value={personal.partnerName}
+                onChange={(e) => onPersonalInfoChange("partnerName", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              <label htmlFor="partnerEmail" className="block text-sm font-medium text-gray-700 mb-1">
+                Partner Email
+              </label>
+              <input
+                id="partnerEmail"
+                type="text"
+                value={personal.partnerEmail}
+                onChange={(e) => onPersonalInfoChange("partnerEmail", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="partnerPhone" className="block text-sm font-medium text-gray-700 mb-1">
+                Partner Phone
+              </label>
+              <input
+                id="partnerPhone"
+                type="text"
+                value={personal.partnerPhone}
+                onChange={(e) => onPersonalInfoChange("partnerPhone", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
               <div className="flex space-x-6">
                 <div className="flex items-center">
@@ -141,12 +180,29 @@ export default function PartTwoBooking ({ personal, onPersonalInfoChange, onNext
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                   />
                   <label htmlFor="other" className="ml-2 text-sm text-gray-700">
-                    Other
+                    Unknown
                   </label>
                 </div>
               </div>
             </div>
-            <div></div>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                Address
+              </label>
+              <input
+                id="address"
+                type="text"
+                value={personal.address}
+                onChange={(e) => onPersonalInfoChange("address", e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            <div>
+              
+            </div>
           </div>
 
           <div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import StepIndicator from "../components/StepIndicator";
 import PartThreeBooking from "../components/PartThreeBooking";
 import { FaFlask, FaUser, FaHeart } from "react-icons/fa";
@@ -10,20 +10,89 @@ import PartTwoBooking from "../components/PartTwoBooking";
 import PartFourBooking from "../components/PartFourBooking";
 import type { Doctor } from "../models/Doctor";
 import type PersonalInfo from "../models/PersonalInfo";
-import { getDoctors } from "../apis/DoctorService";
+import { getDoctors, getScheduleSlotTime } from "../apis/DoctorService";
+import axios from "axios";
+import Swal from "sweetalert2";
+import type { SlotSchedule } from "../models/SlotSchedule";
+
+type CreateOrderRequest = {
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  dateOfBirth: string;
+  gender?: string;
+  address?: string;
+  medicalHistory?: string;
+  partnerFullName?: string;
+  partnerEmail?: string;
+  partnerPhone?: string;
+  userProfileId?: string;
+  doctorId?: string;
+  doctorScheduleId?: number;
+  treatmentServiceId?: string;
+  note?: string;
+  bookingEmail?: string;
+  bookingPhone?: string;
+};
+
+export const defaultPersonalInfo: PersonalInfo = {
+  firstName: "",
+  middleName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  dateOfBirth: "",
+  gender: "",
+  medicalHistory: "",
+  partnerEmail: "",
+  partnerPhone: "",
+  partnerName: "",
+  address: "",
+};
+
+export const handleBookingForm = async (
+  e: FormEvent<HTMLFormElement>,
+  formData: CreateOrderRequest
+) => {
+  e.preventDefault();
+
+  try {
+    const response = await axios.post(
+      "https://localhost:7201/api/v1/orders",
+      formData
+    );
+    console.log(response.data);
+
+    Swal.fire({
+      title: "Thành công!",
+      text: "Bạn đã đặt lịch khám thành công.",
+      icon: "success",
+      confirmButtonText: "OK",
+    });
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error("Lỗi API:", error.response?.data || error.message);
+
+      Swal.fire({
+        title: "Lỗi!",
+        text: error.response?.data?.message || "Có lỗi xảy ra khi đặt lịch.",
+        icon: "error",
+        confirmButtonText: "Thử lại",
+      });
+    } else {
+      console.error("Lỗi không xác định:", error);
+
+      Swal.fire({
+        title: "Lỗi!",
+        text: "Có lỗi không xác định xảy ra.",
+        icon: "error",
+        confirmButtonText: "Đóng",
+      });
+    }
+  }
+};
 
 export default function BookingPage() {
-  const defaultPersonalInfo: PersonalInfo = {
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    dateOfBirth: "",
-    gender: "",
-    medicalHistory: "",
-  };
-
   const [activeStep, setActiveStep] = useState(1);
 
   const [selectedTreatment, setSelectedTreatment] = useState("");
@@ -34,6 +103,8 @@ export default function BookingPage() {
 
   const [selectedTime, setSelectedTime] = useState("");
 
+  const [selectedSchedule, setSelectedSchedule] = useState<number>(0);
+
   const [personalInfo, setPersonalInfo] =
     useState<PersonalInfo>(defaultPersonalInfo);
 
@@ -42,6 +113,27 @@ export default function BookingPage() {
   const [consentGiven, setConsentGiven] = useState(false);
 
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+
+  const [slots, setSlots] = useState<SlotSchedule[]>([]);
+
+  const [formData, setFormData] = useState<CreateOrderRequest>({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    dateOfBirth: "",
+    gender: "",
+    address: "",
+    medicalHistory: "",
+    partnerFullName: "",
+    partnerEmail: "",
+    partnerPhone: "",
+    userProfileId: "BAB3402F-ECDE-4F75-AB59-220F35E5EEE6",
+    doctorId: "",
+    doctorScheduleId: 0,
+    note: "",
+    bookingEmail: "",
+    bookingPhone: "",
+  });
 
   const steps = [
     { number: 1, title: "Treatment Type" },
@@ -74,7 +166,7 @@ export default function BookingPage() {
     }
   };
 
-  const isStepCompleted = (stepNumber: number) => {
+  const isStepCompleted = (stepNumber: number): boolean => {
     switch (stepNumber) {
       case 1:
         return selectedTreatment !== "";
@@ -103,10 +195,6 @@ export default function BookingPage() {
     if (activeStep < 4) setActiveStep(4);
   };
 
-  const handleSubmitBookingForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
-
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -118,6 +206,56 @@ export default function BookingPage() {
     };
     fetchDoctors();
   }, []);
+
+  useEffect(() => {
+    if (!selectedDoctor?.id || !selectedDate) return;
+
+    const fetchSlotTime = async () => {
+      try {
+        const result = await getScheduleSlotTime(
+          selectedDoctor.id,
+          selectedDate
+        );
+        setSlots(result);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchSlotTime();
+  }, [selectedDoctor?.id, selectedDate]);
+
+  useEffect(() => {
+    const mergedFormData: CreateOrderRequest = {
+      firstName: personalInfo.firstName,
+      middleName: personalInfo.middleName,
+      lastName: personalInfo.lastName,
+      dateOfBirth: personalInfo.dateOfBirth,
+      gender: personalInfo.gender,
+      address: personalInfo.address,
+      medicalHistory: personalInfo.medicalHistory,
+      partnerFullName: personalInfo.partnerName,
+      partnerEmail: personalInfo.partnerEmail,
+      partnerPhone: personalInfo.partnerPhone,
+      userProfileId: "BAB3402F-ECDE-4F75-AB59-220F35E5EEE6",
+      doctorId: selectedDoctor?.id || "",
+      doctorScheduleId: selectedSchedule,
+      treatmentServiceId: selectedTreatment,
+      note: specialRequests,
+      bookingEmail: personalInfo.email,
+      bookingPhone: personalInfo.phone,
+    };
+
+    setFormData(mergedFormData);
+  }, [
+    personalInfo,
+    selectedTreatment,
+    selectedDoctor,
+    selectedDate,
+    selectedTime,
+    selectedSchedule,
+    specialRequests,
+  ]);
 
   return (
     <>
@@ -202,7 +340,7 @@ export default function BookingPage() {
           <StepIndicator steps={steps} activeStep={activeStep} />
 
           <div className="max-w-6xl mx-auto space-y-16">
-            <form onSubmit={handleSubmitBookingForm()}>
+            <form onSubmit={(e) => handleBookingForm(e, formData)}>
               <PartOneBooking
                 selectedTreatment={selectedTreatment}
                 onTreatmentSelect={handleTreatmentSelect}
@@ -232,17 +370,17 @@ export default function BookingPage() {
                 selectedTime={selectedTime}
                 specialRequests={specialRequests}
                 consentGiven={consentGiven}
-                timeSlots={timeSlots}
+                timeSlots={slots}
                 onDateChange={setSelectedDate}
                 onTimeChange={setSelectedTime}
                 onSpecialRequestsChange={setSpecialRequests}
+                onScheduleIdChange={setSelectedSchedule}
                 onConsentChange={setConsentGiven}
-                onConfirmBooking={handleConfirmBooking}
-                isCompleted={isStepCompleted(4)}
+                isCompleted={isStepCompleted(activeStep)}
               />
 
               <div className="flex justify-center mt-8">
-                <button type="submit" className="">
+                <button type="submit" className="btn btn-primary">
                   Submit
                 </button>
               </div>
