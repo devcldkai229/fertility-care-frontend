@@ -1,7 +1,7 @@
 import BookingPage from "./pages/BookingPage";
 
 function App() {
-  return <><BookingPage/></>;
+  return <></>;
 }
 
 export default App;
