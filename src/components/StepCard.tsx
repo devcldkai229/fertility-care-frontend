@@ -7,7 +7,12 @@ import {
 } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import type { IVFStep } from "../models/ivf-types";
-import { STEP_COMPLETED, STEP_PROGRESS } from "../constants/StepStatus";
+import {
+  STEP_COMPLETED,
+  STEP_FAILED,
+  STEP_PLANNED,
+  STEP_PROGRESS,
+} from "../constants/StepStatus";
 
 interface StepCardProps {
   step: IVFStep;
@@ -28,19 +33,31 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
       case STEP_COMPLETED:
         return (
           <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-            Hoàn thành
+            COMPLETED
           </span>
         );
       case STEP_PROGRESS:
         return (
           <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-            Đang thực hiện
+            INPROGRESS
+          </span>
+        );
+      case STEP_PLANNED:
+        return (
+          <span className="inline-flex items-center rounded-full border border-gray-300 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+            PLANNED
+          </span>
+        );
+      case STEP_FAILED:
+        return (
+          <span className="inline-flex items-center rounded-full border border-gray-300 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+            FAILED
           </span>
         );
       default:
         return (
           <span className="inline-flex items-center rounded-full border border-gray-300 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-            Sắp tới
+            .....
           </span>
         );
     }
