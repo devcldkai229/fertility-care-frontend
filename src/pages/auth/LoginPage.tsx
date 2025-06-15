@@ -1,5 +1,5 @@
-import { GoogleLoginButton } from "../components/auth/GoogleLoginButton";
-import { LoginForm } from "../components/auth/LoginForm";
+import { GoogleLoginButton } from "../../components/auth/GoogleLoginButton";
+import { LoginForm } from "../../components/auth/LoginForm";
 import "../assets/css/LoginPageStyle.css";
 
 export default function LoginPage() {

@@ -1,19 +1,19 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import StepIndicator from "../components/StepIndicator";
-import PartThreeBooking from "../components/PartThreeBooking";
+import StepIndicator from "../../components/StepIndicator";
 import { FaFlask, FaUser, FaHeart } from "react-icons/fa";
-import Header from "../components/Header";
-import PartOneBooking from "../components/PartOneBooking";
-import PartTwoBooking from "../components/PartTwoBooking";
-import PartFourBooking from "../components/PartFourBooking";
-import type { Doctor } from "../models/Doctor";
-import type PersonalInfo from "../models/PersonalInfo";
-import { getDoctors, getScheduleSlotTime } from "../apis/DoctorService";
+import Header from "../../components/Header";
+import type { Doctor } from "../../models/Doctor";
+import type PersonalInfo from "../../models/PersonalInfo";
+import { getDoctors, getScheduleSlotTime } from "../../apis/DoctorService";
 import axios from "axios";
 import Swal from "sweetalert2";
-import type { SlotSchedule } from "../models/SlotSchedule";
+import type { SlotSchedule } from "../../models/SlotSchedule";
+import PartOneBooking from "../../components/order/PartOneBooking";
+import PartTwoBooking from "../../components/order/PartTwoBooking";
+import PartThreeBooking from "../../components/order/PartThreeBooking";
+import PartFourBooking from "../../components/order/PartFourBooking";
 
 type CreateOrderRequest = {
   firstName?: string;

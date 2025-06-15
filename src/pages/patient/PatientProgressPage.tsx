@@ -1,6 +1,6 @@
 "use client";
-import Footer from "../components/Footer";
-import IVFProgress from "../components/progress/IVFProgress";
+import Footer from "../../components/Footer";
+import IVFProgress from "../../components/progress/IVFProgress";
 
 import {
   DocumentTextIcon,
@@ -10,7 +10,7 @@ import {
   HeartIcon,
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
-import type { IVFStep } from "../models/ivf-types";
+import type { IVFStep } from "../../models/ivf-types";
 
 // Dữ liệu mẫu
 const ivfSteps: IVFStep[] = [

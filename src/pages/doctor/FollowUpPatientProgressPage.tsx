@@ -17,28 +17,28 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
 
-import type OrderStep from "../models/OrderStep";
+import type OrderStep from "../../models/OrderStep";
 import {
   CalAverageCompletedOrderSteps,
   ConvertFullName,
   ConvertSlotTime,
   getStepBySelectedStepDetail,
   getStepCardBg,
-} from "../functions/CommonFunction";
-import { getOrderSteps } from "../apis/ProgressService";
+} from "../../functions/CommonFunction";
+import { getOrderSteps } from "../../apis/ProgressService";
 import {
   STEP_COMPLETED,
   STEP_FAILED,
   STEP_PROGRESS,
-} from "../constants/StepStatus";
+} from "../../constants/StepStatus";
 import axios from "axios";
-import type { Patient } from "../models/Patient";
-import type { SlotSchedule } from "../models/SlotSchedule";
+import type { Patient } from "../../models/Patient";
+import type { SlotSchedule } from "../../models/SlotSchedule";
 import { FaClock } from "react-icons/fa";
-import { getScheduleSlotTime } from "../apis/DoctorService";
+import { getScheduleSlotTime } from "../../apis/DoctorService";
 import Swal from "sweetalert2";
-import { getPatientById } from "../apis/PatientService";
-import { PAYMENT_COMPLETED } from "../constants/PaymentStatus";
+import { getPatientById } from "../../apis/PatientService";
+import { PAYMENT_COMPLETED } from "../../constants/PaymentStatus";
 
 export interface CreateAppointmentDailyRequest {
   patientId: string;
@@ -51,7 +51,7 @@ export interface CreateAppointmentDailyRequest {
   date: string;
 }
 
-export default function DoctorPatientProgress() {
+export default function FollowUpPatientProgressPage() {
   const [orderId, setOrderId] = useState("");
 
   const [patient, setPatient] = useState<Patient>();

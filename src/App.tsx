@@ -1,4 +1,4 @@
-import PatientProgressPage from "./pages/PatientProgressPage";
+import PatientProgressPage from "./pages/patient/PatientProgressPage";
 
 function App() {
   return (
