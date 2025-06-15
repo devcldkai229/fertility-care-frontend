@@ -4,15 +4,14 @@ import { useState } from "react";
 import {
   HomeIcon,
   CalendarIcon,
-  ChartBarIcon,
-  AcademicCapIcon,
   DocumentTextIcon,
   BookOpenIcon,
-  UsersIcon,
   PhoneIcon,
   ChatBubbleLeftRightIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  KeyIcon,
+  CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
 
@@ -22,7 +21,7 @@ interface IVFSidebarProps {
   progressPercentage: number;
 }
 
-export function IVFSidebar({
+export function SideBarPatient({
   patientName,
   patientDOB,
   progressPercentage,
@@ -50,12 +49,11 @@ export function IVFSidebar({
             <>
               <div className="relative flex h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-white">
                 <div className="flex h-full w-full items-center justify-center rounded-full bg-white text-pink-600 font-semibold">
-                  {getInitials(patientName)}
+                  {getInitials(patientName)} {/* avatar */}
                 </div>
               </div>
               <div className="text-white flex-1">
                 <h3 className="font-semibold text-lg">{patientName}</h3>
-                <p className="text-sm opacity-90">{patientDOB}</p>
               </div>
             </>
           )}
@@ -78,7 +76,6 @@ export function IVFSidebar({
               <HeartIconSolid className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">BabySteps</h2>
               <p className="text-xs text-gray-600">Your fertility journey</p>
             </div>
           </div>
@@ -89,7 +86,7 @@ export function IVFSidebar({
           {!sidebarCollapsed && (
             <div className="p-4">
               <div className="text-sm font-medium text-gray-500 mb-3">
-                My Care Portal
+                Cổng thông tin
               </div>
             </div>
           )}
@@ -101,7 +98,7 @@ export function IVFSidebar({
               }`}
             >
               <HomeIcon className="w-5 h-5 flex-shrink-0" />
-              {!sidebarCollapsed && <span>My Dashboard</span>}
+              {!sidebarCollapsed && <span>Hồ sơ</span>}
             </a>
             <a
               href="#"
@@ -110,7 +107,7 @@ export function IVFSidebar({
               }`}
             >
               <HeartIconSolid className="w-5 h-5 flex-shrink-0" />
-              {!sidebarCollapsed && <span>My Journey</span>}
+              {!sidebarCollapsed && <span>Tiến trinh điều trị</span>}
             </a>
             <a
               href="#"
@@ -119,7 +116,7 @@ export function IVFSidebar({
               }`}
             >
               <CalendarIcon className="w-5 h-5 flex-shrink-0" />
-              {!sidebarCollapsed && <span>Appointments</span>}
+              {!sidebarCollapsed && <span>Lịch hẹn</span>}
             </a>
             <a
               href="#"
@@ -127,17 +124,8 @@ export function IVFSidebar({
                 sidebarCollapsed ? "justify-center" : ""
               }`}
             >
-              <ChartBarIcon className="w-5 h-5 flex-shrink-0" />
-              {!sidebarCollapsed && <span>Test Results</span>}
-            </a>
-            <a
-              href="#"
-              className={`flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ${
-                sidebarCollapsed ? "justify-center" : ""
-              }`}
-            >
-              <AcademicCapIcon className="w-5 h-5 flex-shrink-0" />
-              {!sidebarCollapsed && <span>Medications</span>}
+              <KeyIcon className="w-5 h-5 flex-shrink-0" />
+              {!sidebarCollapsed && <span>Đổi mật khẩu</span>}
             </a>
             <a
               href="#"
@@ -146,14 +134,23 @@ export function IVFSidebar({
               }`}
             >
               <DocumentTextIcon className="w-5 h-5 flex-shrink-0" />
-              {!sidebarCollapsed && <span>My Records</span>}
+              {!sidebarCollapsed && <span>Đơn thuốc</span>}
+            </a>
+            <a
+              href="#"
+              className={`flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ${
+                sidebarCollapsed ? "justify-center" : ""
+              }`}
+            >
+              <CreditCardIcon className="w-5 h-5 flex-shrink-0" />
+              {!sidebarCollapsed && <span>Lịch sử thanh toán</span>}
             </a>
           </nav>
 
           {!sidebarCollapsed && (
             <div className="p-4 border-t mt-4">
               <div className="text-sm font-medium text-gray-500 mb-3">
-                Support & Resources
+                Hỗ trợ & tài nguyên
               </div>
               <nav className="space-y-1">
                 <a
@@ -161,48 +158,26 @@ export function IVFSidebar({
                   className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <ChatBubbleLeftRightIcon className="w-5 h-5" />
-                  <span>Chat with Care Team</span>
+                  <span>Hỗ trợ</span>
                 </a>
                 <a
                   href="#"
                   className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <BookOpenIcon className="w-5 h-5" />
-                  <span>Learning Center</span>
-                </a>
-                <a
-                  href="#"
-                  className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <UsersIcon className="w-5 h-5" />
-                  <span>Support Groups</span>
+                  <span>Tìm hiểu thêm</span>
                 </a>
                 <a
                   href="#"
                   className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <PhoneIcon className="w-5 h-5" />
-                  <span>Emergency Contact</span>
+                  <span>Liên lạc khẩn cấp</span>
                 </a>
               </nav>
             </div>
           )}
         </div>
-
-        {/* Bottom Status */}
-        {!sidebarCollapsed && (
-          <div className="p-4 bg-gradient-to-r from-pink-50 to-purple-50 border-t">
-            <div className="text-center">
-              <div className="text-sm font-medium text-gray-900 mb-1">
-                Cycle #1 Progress
-              </div>
-              <div className="flex items-center justify-center gap-1 text-sm text-green-600">
-                <span>✨</span>
-                <span>You're doing great!</span>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

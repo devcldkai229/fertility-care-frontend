@@ -6,13 +6,13 @@ import {
   CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import type { IVFStep } from "../models/ivf-types";
+import type { IVFStep } from "../../models/ivf-types";
 import {
   STEP_COMPLETED,
   STEP_FAILED,
   STEP_PLANNED,
   STEP_PROGRESS,
-} from "../constants/StepStatus";
+} from "../../constants/StepStatus";
 
 interface StepCardProps {
   step: IVFStep;
@@ -33,25 +33,25 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
       case STEP_COMPLETED:
         return (
           <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-            COMPLETED
+            Hoàn thành
           </span>
         );
       case STEP_PROGRESS:
         return (
           <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
-            INPROGRESS
+            Đang tiến hành
           </span>
         );
       case STEP_PLANNED:
         return (
           <span className="inline-flex items-center rounded-full border border-gray-300 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-            PLANNED
+            Sắp tới
           </span>
         );
       case STEP_FAILED:
         return (
           <span className="inline-flex items-center rounded-full border border-gray-300 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-            FAILED
+            Thất bại
           </span>
         );
       default:
@@ -71,7 +71,7 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
           : step.status === "completed"
           ? "bg-gradient-to-r from-green-50 to-emerald-50"
           : "bg-white/80 backdrop-blur-sm"
-      } ${isSelected ? "ring-2 ring-purple-500" : ""}`}
+      } ${isSelected ? "ring-2 ring-pink-600" : ""}`}
       onClick={onClick}
     >
       {/* Appointment Count Badge */}
@@ -130,7 +130,7 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
             <div className="flex items-center gap-2">
               <CreditCardIcon className="w-4 h-4 text-gray-400" />
               <span className="font-semibold text-gray-900">
-                {formatCurrency(step.cost)}
+                {formatCurrency(step.cost)} {/* bỏ vào giá tổng của 1 bước */}
               </span>
               {step.paid ? (
                 <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">

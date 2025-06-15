@@ -2,8 +2,8 @@ import {
   CalendarIcon,
   ClockIcon,
   UserIcon,
-  MapPinIcon,
-  ExclamationTriangleIcon,
+  PlusCircleIcon,
+  BanknotesIcon,
 } from "@heroicons/react/24/outline";
 import type { Appointment } from "../../models/ivf-types";
 
@@ -43,19 +43,15 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
 
   const sortAppointmentsByPriority = (appointments: Appointment[]) => {
     return [...appointments].sort((a, b) => {
-      // Ưu tiên upcoming trước completed
       if (a.status === "upcoming" && b.status === "completed") return -1;
       if (a.status === "completed" && b.status === "upcoming") return 1;
 
-      // Trong cùng status, sắp xếp theo ngày (gần nhất lên đầu)
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
 
       if (a.status === "upcoming") {
-        // Upcoming: ngày gần nhất (sớm nhất) lên đầu
         return dateA.getTime() - dateB.getTime();
       } else {
-        // Completed: ngày gần nhất (mới nhất) lên đầu
         return dateB.getTime() - dateA.getTime();
       }
     });
@@ -90,6 +86,10 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
                     <span>{appointment.date}</span>
                   </div>
                   <div className="flex items-center gap-2">
+                    <PlusCircleIcon className="w-4 h-4" />
+                    <span>Slot 1</span>
+                  </div>
+                  <div className="flex items-center gap-2">
                     <ClockIcon className="w-4 h-4" />
                     <span>{appointment.time}</span>
                   </div>
@@ -97,22 +97,18 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
                     <UserIcon className="w-4 h-4" />
                     <span>{appointment.doctor}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <MapPinIcon className="w-4 h-4" />
-                    <span>{appointment.location}</span>
-                  </div>
                 </div>
 
                 {appointment.instructions && (
-                  <div className="bg-yellow-50 p-3 rounded border-l-4 border-yellow-400">
+                  <div className="bg-green-50 p-3 rounded border-l-4 border-green-400">
                     <div className="flex items-center gap-2 mb-1">
-                      <ExclamationTriangleIcon className="w-4 h-4 text-yellow-600" />
-                      <strong className="text-yellow-800 text-sm">
-                        Lưu ý:
+                      <BanknotesIcon className="h-5 w-5 text-green-600" />
+                      <strong className="text-gray-800 text-sm">
+                        Chi phí phát sinh:
                       </strong>
                     </div>
-                    <p className="text-yellow-700 text-sm">
-                      {appointment.instructions}
+                    <p className="text-gray-700 text-sm">
+                      {appointment.instructions} {/* giá tiền thêm của appointment */}
                     </p>
                   </div>
                 )}

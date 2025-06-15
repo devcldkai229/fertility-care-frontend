@@ -18,7 +18,7 @@ export function ConvertSlotTime(slot: SlotSchedule): string {
 export function CalAverageCompletedOrderSteps(steps: OrderStep[]): number {
   if (steps.length === 0) return 0;
   const progress = steps.filter((x) => x.status === STEP_COMPLETED).length;
-  return progress / steps.length;
+  return (progress / steps.length)*100;
 }
 
 export function getStepCardBg(status: string): string {

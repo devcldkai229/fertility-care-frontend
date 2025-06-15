@@ -31,7 +31,6 @@ export function EmbryoDataCard({ embryoData }: EmbryoDataCardProps) {
 
         {/* Embryo Types */}
         <div className="space-y-3">
-          <h4 className="font-medium text-gray-900">Phân loại phôi:</h4>
           <div className="max-h-64 overflow-y-auto space-y-3 pr-2">
             {embryoData.embryoTypes.map((embryoType, index) => (
               <div
@@ -47,7 +46,7 @@ export function EmbryoDataCard({ embryoData }: EmbryoDataCardProps) {
                   </span>
                 </div>
                 <div className="text-sm text-gray-600">
-                  Chất lượng: {embryoType.quality}
+                  <h4>Chất lượng: {embryoType.quality}</h4>
                 </div>
               </div>
             ))}
