@@ -32,7 +32,7 @@ export default function PartThreeBooking({
           </p>
         </div>
 
-        <div className="space-y-6 shadow-lg border border-gray-100 rounded-lg p-6 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="space-y-6 shadow-lg border border-gray-100 rounded-lg p-6 gap-6">
           {doctors.map((doctor) => (
             <div
               key={doctor.id}

@@ -20,13 +20,7 @@ import {
 export default function HomePage() {
   return (
     <>
-      {/* // Header component */}
-
       <Header />
-
-      {/* // Main content */}
-
-      {/* //  <!-- Hero Section --> */}
 
       <section className="pt-12 pb-20 relative overflow-hidden bg-gradient-to-b from-pink-200 to-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
