@@ -3,11 +3,11 @@ import {
   DocumentTextIcon,
   CalendarIcon,
 } from "@heroicons/react/24/outline";
-import type { IVFStep } from "../models/ivf-types";
+import type { IVFStep } from "../../models/ivf-types";
+import { AppointmentList } from "./AppointmentList";
+import { EggDataCard } from "./EggDataCard";
+import { EmbryoDataCard } from "./EmbryoDataCard";
 
-import { AppointmentList } from "../components/AppointmentList";
-import { EggDataCard } from "../components/EggDataCard";
-import { EmbryoDataCard } from "../components/EmbryoDataCard";
 
 interface StepDetailProps {
   step: IVFStep | null;

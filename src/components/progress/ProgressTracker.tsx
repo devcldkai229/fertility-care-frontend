@@ -1,5 +1,5 @@
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import type { IVFStep } from "../models/ivf-types";
+import type { IVFStep } from "../../models/ivf-types";
 
 interface ProgressTrackerProps {
   steps: IVFStep[];

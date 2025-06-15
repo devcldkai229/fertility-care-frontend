@@ -1,7 +1,7 @@
 "use client";
 
 import { FaArrowRight } from "react-icons/fa";
-import type PersonalInfo from "../models/PersonalInfo";
+import type PersonalInfo from "../../models/PersonalInfo";
 
 interface PartProps {
   personal: PersonalInfo;

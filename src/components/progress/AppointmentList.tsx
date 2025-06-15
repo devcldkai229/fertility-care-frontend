@@ -5,7 +5,7 @@ import {
   MapPinIcon,
   ExclamationTriangleIcon,
 } from "@heroicons/react/24/outline";
-import type { Appointment } from "../models/ivf-types";
+import type { Appointment } from "../../models/ivf-types";
 
 interface AppointmentListProps {
   appointments: Appointment[];

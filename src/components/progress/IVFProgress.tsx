@@ -2,11 +2,11 @@
 import "../assets/css/StylePatientProcess.css";
 import { useState } from "react";
 import { HeartIcon, Bars3Icon } from "@heroicons/react/24/solid";
-import { IVFSidebar } from "../components/IVFSidebar";
-import { ProgressTracker } from "../components/ProgressTracker";
-import { StepCard } from "../components/StepCard";
-import { StepDetail } from "../components/StepDetail";
-import type { IVFStep } from "../models/ivf-types";
+import { IVFSidebar } from "./IVFSidebar";
+import { StepCard } from "../StepCard";
+import type { IVFStep } from "../../models/ivf-types";
+import { ProgressTracker } from "./ProgressTracker";
+import { StepDetail } from "./StepDetail";
 
 interface IVFProgressPageProps {
   steps: IVFStep[];

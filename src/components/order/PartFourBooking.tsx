@@ -2,10 +2,10 @@
 
 import { FaClock } from "react-icons/fa";
 import { CalendarIcon } from "@heroicons/react/24/outline";
-import type { Doctor } from "../models/Doctor";
-import { ConvertFullName, ConvertSlotTime } from "../functions/CommonFunction";
-import { IUI_ID } from "../constants/ApplicationConstant";
-import type { SlotSchedule } from "../models/SlotSchedule";
+import type { Doctor } from "../../models/Doctor";
+import type { SlotSchedule } from "../../models/SlotSchedule";
+import { ConvertFullName, ConvertSlotTime } from "../../functions/CommonFunction";
+import { IUI_ID } from "../../constants/ApplicationConstant";
 
 interface PartProps {
   selectedDoctor: Doctor | null;

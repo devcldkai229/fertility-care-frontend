@@ -2,7 +2,7 @@
 
 import { FaCheck, FaArrowRight } from "react-icons/fa";
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { IUI_ID, IVF_ID } from "../constants/ApplicationConstant";
+import { IUI_ID, IVF_ID } from "../../constants/ApplicationConstant";
 
 interface PartProps {
   selectedTreatment: string;

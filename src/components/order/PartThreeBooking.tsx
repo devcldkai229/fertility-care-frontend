@@ -1,8 +1,8 @@
 "use client";
 
 import { FaStar, FaArrowRight } from "react-icons/fa";
-import type { Doctor } from "../models/Doctor";
-import { ConvertFullName } from "../functions/CommonFunction";
+import type { Doctor } from "../../models/Doctor";
+import { ConvertFullName } from "../../functions/CommonFunction";
 
 interface PartProps {
   doctors: Doctor[];

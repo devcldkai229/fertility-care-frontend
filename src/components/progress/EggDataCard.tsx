@@ -1,4 +1,4 @@
-import type { EggData } from "../models/ivf-types";
+import type { EggData } from "../../models/ivf-types";
 
 interface EggDataCardProps {
   eggData: EggData;

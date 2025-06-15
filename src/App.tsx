@@ -1,7 +1,11 @@
-import DoctorPatientProgress from "./pages/DoctorPatientProgressPage";
+import PatientProgressPage from "./pages/PatientProgressPage";
 
 function App() {
-  return <><DoctorPatientProgress/></>;
+  return (
+    <>
+      <PatientProgressPage />
+    </>
+  );
 }
 
 export default App;
