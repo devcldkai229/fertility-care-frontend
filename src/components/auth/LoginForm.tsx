@@ -1,16 +1,52 @@
+import { useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import axiosInstance from "../../apis/AxiosInstance";
+import Swal from "sweetalert2";
+
 export const LoginForm = () => {
+  const { login } = useAuth();
+
+  const [email, setEmail] = useState("");
+
+  const [password, setPassword] = useState("");
+
+  const handleSubmitLoginUsernamePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axiosInstance.post("/auth/login", {
+        Email: email,
+        Password: password,
+      });
+
+      const { accessToken } = response.data;
+      login(accessToken);
+
+      Swal.fire({
+        title: "Đăng nhập thành công",
+        icon: "success",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <form action="" className="space-y-5">
+    <form
+      onSubmit={(e) => handleSubmitLoginUsernamePassword(e)}
+      className="space-y-5"
+    >
       <div>
         <label
           htmlFor="username"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          <i className="fas fa-user mr-2"></i>Tên đăng nhập
+          <i className="fas fa-user mr-2"></i>Email
         </label>
         <input
-          id="username"
+          id="email"
           type="text"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="Nhập tên đăng nhập"
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"
         />
@@ -21,12 +57,14 @@ export const LoginForm = () => {
           htmlFor="password"
           className="block text-sm font-medium text-gray-700 mb-1"
         >
-          <i className="fas fa-lock mr-2"></i>Mật khẩu
+          <i className="fas fa-lock mr-2"></i>Password
         </label>
         <div className="relative">
           <input
             id="password"
             type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Nhập mật khẩu"
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none pr-12"
           />
