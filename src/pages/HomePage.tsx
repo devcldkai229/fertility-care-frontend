@@ -6,6 +6,7 @@ import ImageSponsorsMarquee from "../components/ImageSponsorsMarquee";
 import TestimonialCard from "../components/TestimonialCard";
 import ContactForm from "../components/ContactForm";
 
+import "../assets/css/HomeStyle.css"; // Import your custom styles
 import { IoMdPlayCircle } from "react-icons/io";
 import {
   ClipboardDocumentCheckIcon,
@@ -87,7 +88,7 @@ export default function HomePage() {
             {/* Ảnh 2 */}
             <div className="absolute -right-20 bottom-1/4 w-20 h-20 z-10 orbit-animate-2">
               <img
-                src="https://www.mysmarthealth.in/wp-content/uploads/2022/03/indian-doctor-receives-patient-tells-him-about-results-tests-medicine-health_496169-2765.webp"
+                src="https://images.unsplash.com/photo-1551601651-bc60f254d532?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
                 alt="Pregnant woman"
                 className="h-full w-full object-cover rounded-xl border-4 border-white shadow-md"
               />

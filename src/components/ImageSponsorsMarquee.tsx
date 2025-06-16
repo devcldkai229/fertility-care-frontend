@@ -6,6 +6,7 @@ import logo4 from "../assets/image/logo_4.jpg";
 import logo5 from "../assets/image/logo_5.jpg";
 import logo6 from "../assets/image/logo_6.jpg";
 
+import "../assets/css/HomeStyle.css";
 const logoPaths = [logo1, logo2, logo3, logo4, logo5, logo6];
 
 const SponsorsMarquee: React.FC = () => {

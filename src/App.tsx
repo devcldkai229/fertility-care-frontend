@@ -1,11 +1,5 @@
-import BookingPage from "./pages/order/BookingPage";
-
 function App() {
-  return (
-    <>
-      <BookingPage />
-    </>
-  );
+  return <></>;
 }
 
 export default App;
