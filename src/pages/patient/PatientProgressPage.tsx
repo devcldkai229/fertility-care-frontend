@@ -10,7 +10,7 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/outline";
 import type { IVFStep } from "../../models/ivf-types";
-import ProgressDetail from "../../components/progress/ProgressDetail";
+import PatientProgressPage2 from "./PatientProgressPage2";
 
 // Dữ liệu mẫu
 const ivfSteps: IVFStep[] = [
@@ -191,7 +191,7 @@ const ivfSteps: IVFStep[] = [
 export default function PatientProgressPage() {
   return (
     <>
-      <ProgressDetail
+      <PatientProgressPage2
         steps={ivfSteps}
         patientName="Lê Thị Hương"
         patientDOB="2000/01/01"

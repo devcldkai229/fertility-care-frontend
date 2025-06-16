@@ -1,9 +1,9 @@
-import PatientProgressPage from "./pages/patient/PatientProgressPage";
+import BookingPage from "./pages/order/BookingPage";
 
 function App() {
   return (
     <>
-      <PatientProgressPage />
+      <BookingPage />
     </>
   );
 }
