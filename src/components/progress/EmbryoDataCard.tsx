@@ -1,11 +1,33 @@
 import { BeakerIcon } from "@heroicons/react/24/outline";
-import type { EmbryoData } from "../../models/ivf-types";
+import type { EmbryoData } from "../../models/EmbryoData";
+import { useState } from "react";
+import type { Order } from "../../models/Order";
 
 interface EmbryoDataCardProps {
-  embryoData: EmbryoData;
+  embryoData: EmbryoData[];
+  order: Order
 }
 
-export function EmbryoDataCard({ embryoData }: EmbryoDataCardProps) {
+export function EmbryoDataCard({ embryoData, order }: EmbryoDataCardProps) {
+  const [openIndexes, setOpenIndexes] = useState<Set<number>>(new Set());
+
+  let totalEggUsed = 0;
+  embryoData.forEach((x) => x.eggMap?.forEach((x) => (totalEggUsed += x)));
+
+  const toggleDetail = (index: number) => {
+    setOpenIndexes((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) newSet.delete(index);
+      else newSet.add(index);
+      return newSet;
+    });
+  };
+
+  const totalEmbryos = embryoData.reduce(
+    (sum, d) => sum + (d.embryoQuantity ?? 0),
+    0
+  );
+
   return (
     <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-0 shadow-lg rounded-lg">
       <div className="px-6 py-4 border-b border-blue-200">
@@ -24,7 +46,7 @@ export function EmbryoDataCard({ embryoData }: EmbryoDataCardProps) {
               Tổng số trứng sử dụng:
             </span>
             <span className="text-lg font-bold text-blue-600">
-              {embryoData.totalEggs}
+              {totalEggUsed}
             </span>
           </div>
         </div>
@@ -32,22 +54,45 @@ export function EmbryoDataCard({ embryoData }: EmbryoDataCardProps) {
         {/* Embryo Types */}
         <div className="space-y-3">
           <div className="max-h-64 overflow-y-auto space-y-3 pr-2">
-            {embryoData.embryoTypes.map((embryoType, index) => (
+            {embryoData.map((data, index) => (
               <div
                 key={index}
                 className="bg-white p-4 rounded-lg border-l-4 border-blue-400"
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-medium text-gray-900">
-                    {embryoType.type}
+                    Chất lượng: {data.embryoGrade}
                   </span>
-                  <span className="text-lg font-bold text-blue-600">
-                    {embryoType.count}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-blue-600">
+                      {data.embryoQuantity}
+                    </span>
+                    <button
+                      onClick={() => toggleDetail(index)}
+                      className="text-blue-500 hover:text-blue-700 text-sm"
+                    >
+                      {openIndexes.has(index) ? "▲" : "▼"}
+                    </button>
+                  </div>
                 </div>
-                <div className="text-sm text-gray-600">
-                  <h4>Chất lượng: {embryoType.quality}</h4>
-                </div>
+
+                {openIndexes.has(index) && (
+                  <div className="text-sm text-gray-600 mt-2 pl-2">
+                    {data.eggMap ? (
+                      <ul className="list-disc list-inside">
+                        {Array.from(data.eggMap.entries()).map(
+                          ([key, value]) => (
+                            <li key={key}>
+                              Loại {key}: {value} trứng
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    ) : (
+                      <p>Không có dữ liệu trứng</p>
+                    )}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -57,13 +102,11 @@ export function EmbryoDataCard({ embryoData }: EmbryoDataCardProps) {
         <div className="bg-gradient-to-r from-blue-500 to-indigo-500 p-4 rounded-lg text-white">
           <div className="flex items-center justify-between">
             <span className="font-medium">Tổng số phôi thành công:</span>
-            <span className="text-2xl font-bold">
-              {embryoData.totalEmbryos}
-            </span>
+            <span className="text-2xl font-bold">{totalEmbryos}</span>
           </div>
           <div className="text-sm opacity-90 mt-1">
             Tỷ lệ thành công:{" "}
-            {Math.round((embryoData.totalEmbryos / embryoData.totalEggs) * 100)}
+            {(order.totalEggs ?? 0) > 0 ? Math.round((totalEmbryos / (order.totalEggs ?? 1)) * 100) : 0}%
             %
           </div>
         </div>

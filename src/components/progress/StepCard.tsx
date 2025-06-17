@@ -1,24 +1,51 @@
 "use client";
 
 import {
+  BeakerIcon,
   BellIcon,
   ClockIcon,
   CreditCardIcon,
+  DocumentTextIcon,
+  EyeDropperIcon,
+  HeartIcon,
+  SparklesIcon,
 } from "@heroicons/react/24/outline";
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import type { IVFStep } from "../../models/ivf-types";
 import {
   STEP_COMPLETED,
   STEP_FAILED,
   STEP_PLANNED,
   STEP_PROGRESS,
 } from "../../constants/StepStatus";
+import type OrderStep from "../../models/OrderStep";
+import {
+  PAYMENT_COMPLETED,
+  PAYMENT_PENDING,
+} from "../../constants/PaymentStatus";
 
 interface StepCardProps {
-  step: IVFStep;
+  step: OrderStep;
   isSelected: boolean;
   onClick: () => void;
 }
+
+export const renderIconByStep = (step: OrderStep) => {
+    const stepOrder = step.treatmentStep.stepOrder;
+    switch (stepOrder) {
+      case 1:
+        return <DocumentTextIcon />;
+      case 2:
+        return <SparklesIcon />;
+      case 3:
+        return <EyeDropperIcon />;
+      case 4:
+        return <BeakerIcon />;
+      case 5:
+        return <HeartIcon />;
+      case 6:
+        return <ClockIcon />;
+    }
+  };
 
 export function StepCard({ step, isSelected, onClick }: StepCardProps) {
   const formatCurrency = (amount: number) => {
@@ -66,9 +93,9 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
   return (
     <div
       className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-0 relative rounded-lg ${
-        step.status === "active"
+        step.status === STEP_PROGRESS
           ? "bg-gradient-to-r from-blue-50 to-indigo-50 shadow-md"
-          : step.status === "completed"
+          : step.status === STEP_COMPLETED
           ? "bg-gradient-to-r from-green-50 to-emerald-50"
           : "bg-white/80 backdrop-blur-sm"
       } ${isSelected ? "ring-2 ring-pink-600" : ""}`}
@@ -78,7 +105,7 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
       <div className="absolute top-4 right-4 z-10">
         <div className="flex items-center gap-1 bg-orange-500 text-white px-3 py-2 rounded-full text-sm font-semibold shadow-lg animate-wiggle">
           <BellIcon className="w-5 h-5" />
-          <span>{step.appointments.length}</span>
+          <span>{step.appointments?.length}</span>
         </div>
       </div>
 
@@ -87,14 +114,14 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
           {/* Step Icon */}
           <div
             className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 relative ${
-              step.status === "completed"
+              step.status === STEP_COMPLETED
                 ? "bg-green-500 text-white"
-                : step.status === "active"
+                : step.status === STEP_PROGRESS
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-gray-500"
             }`}
           >
-            {step.icon}
+            {renderIconByStep(step)}
 
             {/* Energy Glow Effect */}
             {step.status === "active" && (
@@ -106,22 +133,24 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-2">
               <h3 className="text-lg font-semibold text-gray-900">
-                {step.title}
+                {step.treatmentStep.stepName}
               </h3>
-              {getStatusBadge(step.status)}
+              {getStatusBadge(step.status ?? "")}
             </div>
 
-            <p className="text-gray-600 mb-3">{step.description}</p>
+            <p className="text-gray-600 mb-3">
+              {step.treatmentStep.description}
+            </p>
 
             <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
               <div className="flex items-center gap-1">
                 <ClockIcon className="w-4 h-4" />
-                <span>{step.duration}</span>
+                <span>{step.treatmentStep.estimatedDurationDays} ngày</span>
               </div>
-              {step.completionDate && (
+              {step.endDate && (
                 <div className="flex items-center gap-1">
                   <CheckCircleIcon className="w-4 h-4 text-green-500" />
-                  <span>Hoàn thành {step.completionDate}</span>
+                  <span>Hoàn thành {step.endDate}</span>
                 </div>
               )}
             </div>
@@ -130,15 +159,20 @@ export function StepCard({ step, isSelected, onClick }: StepCardProps) {
             <div className="flex items-center gap-2">
               <CreditCardIcon className="w-4 h-4 text-gray-400" />
               <span className="font-semibold text-gray-900">
-                {formatCurrency(step.cost)} {/* bỏ vào giá tổng của 1 bước */}
+                {formatCurrency(step.totalAmount ?? 0)}{" "}
+                {/* bỏ vào giá tổng của 1 bước */}
               </span>
-              {step.paid ? (
+              {step.paymentStatus == PAYMENT_COMPLETED ? (
                 <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
                   Đã thanh toán
                 </span>
-              ) : (
+              ) : step.paymentStatus == PAYMENT_PENDING ? (
                 <span className="inline-flex items-center rounded-full border border-orange-300 px-2.5 py-0.5 text-xs font-medium text-orange-600">
                   Chưa thanh toán
+                </span>
+              ) : (
+                <span className="inline-flex items-center rounded-full border border-red-300 px-2.5 py-0.5 text-xs font-medium text-red-600">
+                  Thất bại
                 </span>
               )}
             </div>

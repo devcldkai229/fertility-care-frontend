@@ -17,7 +17,7 @@ export interface Order {
 
     note?: string,
 
-    totalEgg?: number,
+    totalEggs?: number,
 
     createdAt?: string,
 

@@ -14,7 +14,7 @@ import type { Patient } from "../../models/Patient";
 
 export default function PatientProgressPage2() {
   const { patientId, orderIds } = useAuth();
-  const [selectedStep, setSelectedStep] = useState<number | null>(-1);
+  const [selectedStep, setSelectedStep] = useState<OrderStep | null>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [steps, setSteps] = useState<OrderStep[]>([]);
   const [patient, setPatient] = useState<Patient | null>(null);
@@ -134,7 +134,7 @@ export default function PatientProgressPage2() {
 
               {/* Step Details Panel */}
               <div>
-                <StepDetail step={selectedStep} />
+                <StepDetail step={selectedStep ?? null} />
               </div>
             </div>
           </div>

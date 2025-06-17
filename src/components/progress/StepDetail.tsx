@@ -3,17 +3,21 @@ import {
   DocumentTextIcon,
   CalendarIcon,
 } from "@heroicons/react/24/outline";
-import type { IVFStep } from "../../models/ivf-types";
 import { AppointmentList } from "./AppointmentList";
 import { EggDataCard } from "./EggDataCard";
 import { EmbryoDataCard } from "./EmbryoDataCard";
-
+import type OrderStep from "../../models/OrderStep";
+import { renderIconByStep } from "./StepCard";
+import { PAYMENT_COMPLETED, PAYMENT_PENDING } from "../../constants/PaymentStatus";
+import { STEP_EMBRYO, STEP_TAKE_EGG } from "../../constants/IVFConstant";
+import type { Order } from "../../models/Order";
 
 interface StepDetailProps {
-  step: IVFStep | null;
+  step: OrderStep | null;
+  order: Order | null
 }
 
-export function StepDetail({ step }: StepDetailProps) {
+export function StepDetail({ step, order }: StepDetailProps) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -55,18 +59,22 @@ export function StepDetail({ step }: StepDetailProps) {
                   : "bg-gray-200 text-gray-500"
               }`}
             >
-              {step.icon}
+              {renderIconByStep(step)}
             </div>
             <div>
-              <div className="text-lg font-semibold">{step.title}</div>
-              <div className="text-sm text-gray-500">Bước {step.id}</div>
+              <div className="text-lg font-semibold">
+                {step.treatmentStep.stepName}
+              </div>
+              <div className="text-sm text-gray-500">
+                Bước {step.treatmentStep.stepOrder}
+              </div>
             </div>
           </div>
         </div>
         <div className="p-6 space-y-4">
-          <p className="text-gray-600">{step.description}</p>
+          <p className="text-gray-600">{step.treatmentStep.description}</p>
 
-          {step.doctorNotes && (
+          {step.note && (
             <div className="bg-blue-50 p-4 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <DocumentTextIcon className="w-4 h-4 text-blue-600" />
@@ -74,7 +82,7 @@ export function StepDetail({ step }: StepDetailProps) {
                   Ghi chú của bác sĩ
                 </span>
               </div>
-              <p className="text-blue-800 text-sm">{step.doctorNotes}</p>
+              <p className="text-blue-800 text-sm">{step.note}</p>
             </div>
           )}
 
@@ -83,23 +91,33 @@ export function StepDetail({ step }: StepDetailProps) {
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-gray-600">Chi phí:</span>
-              <span className="font-semibold">{formatCurrency(step.cost)}</span>
+              <span className="font-semibold">
+                {formatCurrency(step.totalAmount ?? 0)}
+              </span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Trạng thái thanh toán:</span>
-              {step.paid ? (
+            <div className="flex items-center gap-2">
+              <CreditCardIcon className="w-4 h-4 text-gray-400" />
+              <span className="font-semibold text-gray-900">
+                {formatCurrency(step.totalAmount ?? 0)}{" "}
+                {/* bỏ vào giá tổng của 1 bước */}
+              </span>
+              {step.paymentStatus == PAYMENT_COMPLETED ? (
                 <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
                   Đã thanh toán
                 </span>
-              ) : (
+              ) : step.paymentStatus == PAYMENT_PENDING ? (
                 <span className="inline-flex items-center rounded-full border border-orange-300 px-2.5 py-0.5 text-xs font-medium text-orange-600">
                   Chưa thanh toán
+                </span>
+              ) : (
+                <span className="inline-flex items-center rounded-full border border-red-300 px-2.5 py-0.5 text-xs font-medium text-red-600">
+                  Thất bại
                 </span>
               )}
             </div>
           </div>
 
-          {!step.paid && (
+          {step.paymentStatus != PAYMENT_COMPLETED  && (
             <button className="w-full inline-flex items-center justify-center rounded-md bg-gradient-to-r from-pink-500 to-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:from-pink-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors">
               <CreditCardIcon className="w-4 h-4 mr-2" />
               Thanh toán ngay
@@ -108,14 +126,11 @@ export function StepDetail({ step }: StepDetailProps) {
         </div>
       </div>
 
-      {/* Appointments */}
-      <AppointmentList appointments={step.appointments} />
+      <AppointmentList appointments={step.appointments ?? []} />
 
-      {/* Egg Data Card - Step 3 */}
-      {step.id === 3 && step.eggData && <EggDataCard eggData={step.eggData} />}
+      {step.treatmentStep.stepOrder === STEP_TAKE_EGG && order && <EggDataCard order={order} />}
 
-      {/* Embryo Data Card - Step 4 */}
-      {step.id === 4 && step.embryoData && (
+      {step.treatmentStep.stepOrder === STEP_EMBRYO && (
         <EmbryoDataCard embryoData={step.embryoData} />
       )}
     </div>

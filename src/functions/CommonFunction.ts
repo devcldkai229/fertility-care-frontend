@@ -40,3 +40,4 @@ export function getStepBySelectedStepDetail(
 ): OrderStep | undefined {
   return steps.find((x) => x.id === selectedStepDetail);
 }
+

@@ -5,28 +5,39 @@ import {
   PlusCircleIcon,
   BanknotesIcon,
 } from "@heroicons/react/24/outline";
-import type { Appointment } from "../../models/ivf-types";
+import type { Appointment } from "../../models/Appointment";
+import {
+  APPOINTMENT_BOOKED,
+  APPOINTMENT_COMPLETED,
+  APPOINTMENT_CANCELLED,
+} from "../../constants/AppointmentStatus";
+import { ConvertSlotTime } from "../../functions/CommonFunction";
 
 interface AppointmentListProps {
   appointments: Appointment[];
 }
 
+export const parseDateFromDDMMYYYY = (dateStr: string): Date => {
+  const [day, month, year] = dateStr.split("/").map(Number);
+  return new Date(year, month - 1, day);
+};
+
 export function AppointmentList({ appointments }: AppointmentListProps) {
   const getAppointmentStatusBadge = (status: string) => {
     switch (status) {
-      case "completed":
+      case APPOINTMENT_COMPLETED:
         return (
           <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
             Đã hoàn thành
           </span>
         );
-      case "upcoming":
+      case APPOINTMENT_BOOKED:
         return (
           <span className="inline-flex items-center rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-medium text-orange-800">
             Sắp tới
           </span>
         );
-      case "cancelled":
+      case APPOINTMENT_CANCELLED:
         return (
           <span className="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">
             Đã hủy
@@ -43,13 +54,15 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
 
   const sortAppointmentsByPriority = (appointments: Appointment[]) => {
     return [...appointments].sort((a, b) => {
-      if (a.status === "upcoming" && b.status === "completed") return -1;
-      if (a.status === "completed" && b.status === "upcoming") return 1;
+      if (a.status === APPOINTMENT_BOOKED && b.status === APPOINTMENT_COMPLETED)
+        return -1;
+      if (a.status === APPOINTMENT_COMPLETED && b.status === APPOINTMENT_BOOKED)
+        return 1;
 
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+      const dateA = parseDateFromDDMMYYYY(a.appointmentDate ?? "");
+      const dateB = parseDateFromDDMMYYYY(b.appointmentDate ?? "");
 
-      if (a.status === "upcoming") {
+      if (a.status === APPOINTMENT_BOOKED) {
         return dateA.getTime() - dateB.getTime();
       } else {
         return dateB.getTime() - dateA.getTime();
@@ -75,31 +88,38 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
               >
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium text-gray-900">
-                    {appointment.title}
+                    {appointment.type}
                   </h4>
-                  {getAppointmentStatusBadge(appointment.status)}
+                  {getAppointmentStatusBadge(appointment.status ?? "")}
                 </div>
 
                 <div className="space-y-2 text-sm text-gray-600">
                   <div className="flex items-center gap-2">
                     <CalendarIcon className="w-4 h-4" />
-                    <span>{appointment.date}</span>
+                    <span>{appointment.appointmentDate}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <PlusCircleIcon className="w-4 h-4" />
-                    <span>Slot 1</span>
+                    <span>Slot {appointment.slot}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <ClockIcon className="w-4 h-4" />
-                    <span>{appointment.time}</span>
+                    <span>
+                      {ConvertSlotTime({
+                        slotId: -1,
+                        scheduleId: -1,
+                        startTime: appointment.startTime ?? "",
+                        endTime: appointment.endTime ?? "",
+                      })}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <UserIcon className="w-4 h-4" />
-                    <span>{appointment.doctor}</span>
+                    <span>{appointment.doctorName}</span>
                   </div>
                 </div>
 
-                {appointment.instructions && (
+                {appointment.extraFee && (
                   <div className="bg-green-50 p-3 rounded border-l-4 border-green-400">
                     <div className="flex items-center gap-2 mb-1">
                       <BanknotesIcon className="h-5 w-5 text-green-600" />
@@ -108,14 +128,15 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
                       </strong>
                     </div>
                     <p className="text-gray-700 text-sm">
-                      {appointment.instructions} {/* giá tiền thêm của appointment */}
+                      {appointment.extraFee}
+                      {/* giá tiền thêm của appointment */}
                     </p>
                   </div>
                 )}
 
-                {appointment.notes && (
+                {appointment.note && (
                   <div className="bg-gray-50 p-3 rounded text-sm text-gray-700">
-                    <strong>Ghi chú:</strong> {appointment.notes}
+                    <strong>Ghi chú:</strong> {appointment.note}
                   </div>
                 )}
               </div>

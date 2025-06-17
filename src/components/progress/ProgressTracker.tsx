@@ -1,8 +1,9 @@
 import { CheckCircleIcon } from "@heroicons/react/24/solid";
-import type { IVFStep } from "../../models/ivf-types";
+import type OrderStep from "../../models/OrderStep";
+import { STEP_COMPLETED, STEP_PROGRESS } from "../../constants/StepStatus";
 
 interface ProgressTrackerProps {
-  steps: IVFStep[];
+  steps: OrderStep[];
   completedSteps: number;
   totalSteps: number;
 }
@@ -45,14 +46,14 @@ export function ProgressTracker({
               >
                 <div
                   className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-500 relative z-10 ${
-                    step.status === "completed"
+                    step.status === STEP_COMPLETED
                       ? "bg-green-500 text-white shadow-lg"
-                      : step.status === "active"
+                      : step.status === STEP_PROGRESS
                       ? "bg-blue-500 text-white shadow-lg"
                       : "bg-gray-200 text-gray-500"
                   }`}
                 >
-                  {step.status === "completed" ? (
+                  {step.status === STEP_COMPLETED ? (
                     <CheckCircleIcon className="w-6 h-6" />
                   ) : (
                     step.id
@@ -64,7 +65,7 @@ export function ProgressTracker({
                   <div className="absolute top-5 left-1/2 w-full h-0.5 bg-gray-200 -z-0">
                     <div
                       className={`h-full transition-all duration-1000 ${
-                        step.status === "completed"
+                        step.status === STEP_COMPLETED
                           ? "bg-green-500 w-full"
                           : step.status === "active"
                           ? "bg-blue-500 w-1/2"
@@ -76,7 +77,7 @@ export function ProgressTracker({
 
                 <div className="text-xs text-center mt-2 max-w-20">
                   <div className="font-medium text-gray-700">
-                    Bước {step.id}
+                    Bước {step.treatmentStep.stepOrder}
                   </div>
                 </div>
               </div>

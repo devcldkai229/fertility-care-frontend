@@ -1,10 +1,10 @@
-import type { EggData } from "../../models/ivf-types";
+import type { Order } from "../../models/Order";
 
 interface EggDataCardProps {
-  eggData: EggData;
+  order: Order;
 }
 
-export function EggDataCard({ eggData }: EggDataCardProps) {
+export function EggDataCard({ order }: EggDataCardProps) {
   return (
     <div className="bg-gradient-to-r from-pink-50 to-rose-50 border-0 shadow-lg rounded-lg">
       <div className="px-6 py-4 border-b border-pink-200">
@@ -19,18 +19,18 @@ export function EggDataCard({ eggData }: EggDataCardProps) {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-white p-4 rounded-lg text-center">
             <div className="text-2xl font-bold text-pink-600">
-              {eggData.totalEggs}
+              {order.totalEggs ?? 0}
             </div>
             <div className="text-sm text-gray-600">Tổng số trứng</div>
           </div>
-          {eggData.matureEggs && (
+          {/* {eggData.matureEggs && (
             <div className="bg-white p-4 rounded-lg text-center">
               <div className="text-2xl font-bold text-pink-600">
                 {eggData.matureEggs}
               </div>
               <div className="text-sm text-gray-600">Trứng chín</div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
