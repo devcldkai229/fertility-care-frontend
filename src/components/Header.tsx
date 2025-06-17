@@ -62,26 +62,55 @@ export default function Header() {
                 Contact
               </a>
             </li>
-            {isAuthenticated && 
-            <li>
-              <a
-                href="/profile"
-                className="px-3 py-2 text-sm font-medium text-gray-800 hover:text-purple-600 transition-colors"
-              >
-                Profile
-              </a>
-            </li>}
+            {isAuthenticated && (
+              <li>
+                <a
+                  href="/profile"
+                  className="px-3 py-2 text-sm font-medium text-gray-800 hover:text-purple-600 transition-colors"
+                >
+                  Profile
+                </a>
+              </li>
+            )}
           </ul>
         </nav>
 
-        {/* Button bên phải của header */}
-        <div>
+        {/* Avatar và Button bên phải */}
+        <div className="flex items-center gap-6">
+          {/* User Profile */}
+          <div className="flex items-center gap-3 px-4 py-2 rounded-full bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-100 hover:shadow-md transition-all duration-300 cursor-pointer group">
+            {/* Avatar */}
+            <div className="relative">
+              <img
+                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&auto=format&fit=crop&w=688&q=80 "
+                alt="User Avatar"
+                className="w-10 h-10 rounded-full object-cover shadow-lg ring-2 ring-white group-hover:ring-purple-200 transition-all duration-300"
+              />
+              {/*icon online màu xanh*/}
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
+            </div>
+
+            {/* Xin chào - Name*/}
+            <div className="flex flex-col">
+              <span className="text-xs text-gray-500 font-medium">
+                Xin chào,
+              </span>
+              <span className="text-sm font-semibold text-gray-800 group-hover:text-purple-700 transition-colors">
+                Nguyễn Thị Mai
+              </span>
+            </div>
+          </div>
+
+          {/* | */}
+          <div className="w-px h-8 bg-gray-200"></div>
+
+          {/* Button */}
           <Button
             label="Đặt lịch ngay"
             variant="solid"
             color="primary"
             size="md"
-            href="/order"
+            href="/service"
           />
         </div>
       </div>

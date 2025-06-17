@@ -4,7 +4,7 @@ import BookingPage from "./pages/order/BookingPage";
 import { AuthProvider } from "./contexts/AuthContext";
 import LoginPage from "./pages/auth/LoginPage";
 import PrivateRoute from "./routes/PrivateRoute";
-import PatientProgressPage from './pages/patient/PatientProgressPage';
+import PatientProgressPage from "./pages/patient/PatientProgressPage";
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         </Routes>
       </AuthProvider> */}
 
-      <PatientProgressPage/>
+      <PatientProgressPage />
     </>
   );
 }
