@@ -30,22 +30,22 @@ interface StepCardProps {
 }
 
 export const renderIconByStep = (step: OrderStep) => {
-    const stepOrder = step.treatmentStep.stepOrder;
-    switch (stepOrder) {
-      case 1:
-        return <DocumentTextIcon />;
-      case 2:
-        return <SparklesIcon />;
-      case 3:
-        return <EyeDropperIcon />;
-      case 4:
-        return <BeakerIcon />;
-      case 5:
-        return <HeartIcon />;
-      case 6:
-        return <ClockIcon />;
-    }
-  };
+  const stepOrder = step.treatmentStep.stepOrder;
+  switch (stepOrder) {
+    case 1:
+      return <DocumentTextIcon />;
+    case 2:
+      return <SparklesIcon />;
+    case 3:
+      return <EyeDropperIcon />;
+    case 4:
+      return <BeakerIcon />;
+    case 5:
+      return <HeartIcon />;
+    case 6:
+      return <ClockIcon />;
+  }
+};
 
 export function StepCard({ step, isSelected, onClick }: StepCardProps) {
   const formatCurrency = (amount: number) => {

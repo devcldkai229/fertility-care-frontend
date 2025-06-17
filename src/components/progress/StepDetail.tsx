@@ -8,22 +8,45 @@ import { EggDataCard } from "./EggDataCard";
 import { EmbryoDataCard } from "./EmbryoDataCard";
 import type OrderStep from "../../models/OrderStep";
 import { renderIconByStep } from "./StepCard";
-import { PAYMENT_COMPLETED, PAYMENT_PENDING } from "../../constants/PaymentStatus";
+import {
+  PAYMENT_COMPLETED,
+  PAYMENT_PENDING,
+} from "../../constants/PaymentStatus";
 import { STEP_EMBRYO, STEP_TAKE_EGG } from "../../constants/IVFConstant";
 import type { Order } from "../../models/Order";
+import { useEffect, useState } from "react";
+import axiosInstance from "../../apis/AxiosInstance";
+import type { EmbryoData } from "../../models/EmbryoData";
 
 interface StepDetailProps {
   step: OrderStep | null;
-  order: Order | null
+  order: Order | null;
 }
 
 export function StepDetail({ step, order }: StepDetailProps) {
+  const [embryoData, setEmbryoData] = useState<EmbryoData[]>([]);
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
       currency: "VND",
     }).format(amount);
   };
+
+  useEffect(() => {
+    const fetchEmbryos = async () => {
+      try {
+        const response = await axiosInstance.get(`/embryos/${order?.id}`);
+
+        const result = response.data.data;
+        setEmbryoData(result);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchEmbryos();
+  });
 
   if (!step) {
     return (
@@ -117,7 +140,7 @@ export function StepDetail({ step, order }: StepDetailProps) {
             </div>
           </div>
 
-          {step.paymentStatus != PAYMENT_COMPLETED  && (
+          {step.paymentStatus != PAYMENT_COMPLETED && (
             <button className="w-full inline-flex items-center justify-center rounded-md bg-gradient-to-r from-pink-500 to-purple-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:from-pink-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors">
               <CreditCardIcon className="w-4 h-4 mr-2" />
               Thanh toán ngay
@@ -128,10 +151,12 @@ export function StepDetail({ step, order }: StepDetailProps) {
 
       <AppointmentList appointments={step.appointments ?? []} />
 
-      {step.treatmentStep.stepOrder === STEP_TAKE_EGG && order && <EggDataCard order={order} />}
+      {step.treatmentStep.stepOrder === STEP_TAKE_EGG && order && (
+        <EggDataCard order={order} />
+      )}
 
-      {step.treatmentStep.stepOrder === STEP_EMBRYO && (
-        <EmbryoDataCard embryoData={step.embryoData} />
+      {step.treatmentStep.stepOrder === STEP_EMBRYO && order && (
+        <EmbryoDataCard embryoData={embryoData} order={order} />
       )}
     </div>
   );

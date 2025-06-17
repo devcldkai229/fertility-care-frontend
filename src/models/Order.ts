@@ -1,6 +1,7 @@
 import type { Doctor } from "./Doctor";
 import type OrderStep from "./OrderStep";
 import type { Patient } from "./Patient";
+import type { TreatmentService } from "./TreatmentService";
 
 export interface Order {
     id?: string,
@@ -10,6 +11,8 @@ export interface Order {
     doctor?: Doctor,
 
     startDate?: string,
+
+    treatmentService?: TreatmentService,
 
     endDate?: string,
 

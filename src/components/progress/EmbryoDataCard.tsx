@@ -11,9 +11,6 @@ interface EmbryoDataCardProps {
 export function EmbryoDataCard({ embryoData, order }: EmbryoDataCardProps) {
   const [openIndexes, setOpenIndexes] = useState<Set<number>>(new Set());
 
-  let totalEggUsed = 0;
-  embryoData.forEach((x) => x.eggMap?.forEach((x) => (totalEggUsed += x)));
-
   const toggleDetail = (index: number) => {
     setOpenIndexes((prev) => {
       const newSet = new Set(prev);
@@ -40,7 +37,7 @@ export function EmbryoDataCard({ embryoData, order }: EmbryoDataCardProps) {
       </div>
       <div className="p-6 space-y-4">
         {/* Egg Summary */}
-        <div className="bg-white p-4 rounded-lg">
+        {/* <div className="bg-white p-4 rounded-lg">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium text-gray-700">
               Tổng số trứng sử dụng:
@@ -49,7 +46,7 @@ export function EmbryoDataCard({ embryoData, order }: EmbryoDataCardProps) {
               {totalEggUsed}
             </span>
           </div>
-        </div>
+        </div> */}
 
         {/* Embryo Types */}
         <div className="space-y-3">
@@ -76,7 +73,7 @@ export function EmbryoDataCard({ embryoData, order }: EmbryoDataCardProps) {
                   </div>
                 </div>
 
-                {openIndexes.has(index) && (
+                {/* {openIndexes.has(index) && (
                   <div className="text-sm text-gray-600 mt-2 pl-2">
                     {data.eggMap ? (
                       <ul className="list-disc list-inside">
@@ -92,7 +89,7 @@ export function EmbryoDataCard({ embryoData, order }: EmbryoDataCardProps) {
                       <p>Không có dữ liệu trứng</p>
                     )}
                   </div>
-                )}
+                )} */}
               </div>
             ))}
           </div>
@@ -107,7 +104,6 @@ export function EmbryoDataCard({ embryoData, order }: EmbryoDataCardProps) {
           <div className="text-sm opacity-90 mt-1">
             Tỷ lệ thành công:{" "}
             {(order.totalEggs ?? 0) > 0 ? Math.round((totalEmbryos / (order.totalEggs ?? 1)) * 100) : 0}%
-            %
           </div>
         </div>
       </div>
