@@ -14,6 +14,7 @@ import PartOneBooking from "../../components/order/PartOneBooking";
 import PartTwoBooking from "../../components/order/PartTwoBooking";
 import PartThreeBooking from "../../components/order/PartThreeBooking";
 import PartFourBooking from "../../components/order/PartFourBooking";
+import { useAuth } from "../../contexts/AuthContext";
 
 type CreateOrderRequest = {
   firstName?: string;
@@ -86,29 +87,18 @@ export const handleBookingForm = async (
 };
 
 export default function BookingPage() {
+  const { userProfileId } = useAuth();
   const [activeStep, setActiveStep] = useState(1);
-
   const [selectedTreatment, setSelectedTreatment] = useState("");
-
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-
   const [selectedDate, setSelectedDate] = useState("");
-
   const [selectedTime, setSelectedTime] = useState("");
-
   const [selectedSchedule, setSelectedSchedule] = useState<number>(0);
-
-  const [personalInfo, setPersonalInfo] =
-    useState<PersonalInfo>(defaultPersonalInfo);
-
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(defaultPersonalInfo);
   const [specialRequests, setSpecialRequests] = useState("");
-
   const [consentGiven, setConsentGiven] = useState(false);
-
   const [doctors, setDoctors] = useState<Doctor[]>([]);
-
   const [slots, setSlots] = useState<SlotSchedule[]>([]);
-
   const [formData, setFormData] = useState<CreateOrderRequest>({
     firstName: "",
     middleName: "",
@@ -120,7 +110,7 @@ export default function BookingPage() {
     partnerFullName: "",
     partnerEmail: "",
     partnerPhone: "",
-    userProfileId: "BAB3402F-ECDE-4F75-AB59-220F35E5EEE6",
+    userProfileId: userProfileId,
     doctorId: "",
     doctorScheduleId: 0,
     note: "",

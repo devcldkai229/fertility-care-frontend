@@ -1,6 +1,9 @@
+import { useAuth } from "../contexts/AuthContext";
 import Button from "./Button";
 
 export default function Header() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <div className="relative px-12 h-20 bg-white shadow-md border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-8 h-full flex items-center justify-between">
@@ -59,6 +62,15 @@ export default function Header() {
                 Contact
               </a>
             </li>
+            {isAuthenticated && 
+            <li>
+              <a
+                href="/profile"
+                className="px-3 py-2 text-sm font-medium text-gray-800 hover:text-purple-600 transition-colors"
+              >
+                Profile
+              </a>
+            </li>}
           </ul>
         </nav>
 
@@ -69,7 +81,7 @@ export default function Header() {
             variant="solid"
             color="primary"
             size="md"
-            href="/service"
+            href="/order"
           />
         </div>
       </div>

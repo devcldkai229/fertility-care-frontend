@@ -4,7 +4,7 @@ import axiosInstance from "../../apis/AxiosInstance";
 import Swal from "sweetalert2";
 
 export const LoginForm = () => {
-  const { login } = useAuth();
+  const { login, setPatientInfo } = useAuth();
 
   const [email, setEmail] = useState("");
 
@@ -13,13 +13,17 @@ export const LoginForm = () => {
   const handleSubmitLoginUsernamePassword = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("/auth/login", {
+      const res = await axiosInstance.post("/auth/login", {
         Email: email,
         Password: password,
       });
 
-      const { accessToken } = response.data;
-      login(accessToken);
+      const { accessToken, user } = res.data;
+      login(accessToken, user.profileId);
+
+      const info = await axiosInstance.post("/patients/me");
+      const { data } = info.data;
+      setPatientInfo(data.PatientId, data.OrderIds);
 
       Swal.fire({
         title: "Đăng nhập thành công",
@@ -27,6 +31,10 @@ export const LoginForm = () => {
       });
     } catch (error) {
       console.log(error);
+      Swal.fire({
+        title: "Đăng nhập thất bại",
+        icon: "error",
+      });
     }
   };
 
