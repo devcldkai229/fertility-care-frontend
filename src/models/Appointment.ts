@@ -7,7 +7,7 @@ export interface Appointment {
 
   appointmentDate?: string;
 
-  slot?: string,
+  slot?: number,
 
   startTime?: string;
 
@@ -22,8 +22,6 @@ export interface Appointment {
   doctorId?: string;
 
   paymentStatus?: string;
-
-  appointmentStatus?: string;
 
   extraFee?: number;
 

@@ -14,27 +14,18 @@ import {
   CreditCardIcon,
 } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartIconSolid } from "@heroicons/react/24/solid";
+import type { Patient } from "../../models/Patient";
+import { ConvertFullName } from "../../functions/CommonFunction";
+import { Link } from "react-router-dom";
 
-interface IVFSidebarProps {
-  patientName: string;
-  patientDOB: string;
-  progressPercentage: number;
+interface SideBarProps {
+  patient: Patient | null,
 }
 
 export function SideBarPatient({
-  patientName,
-  patientDOB,
-  progressPercentage,
-}: IVFSidebarProps) {
+  patient,
+}: SideBarProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase();
-  };
 
   return (
     <div
@@ -49,11 +40,11 @@ export function SideBarPatient({
             <>
               <div className="relative flex h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-white">
                 <div className="flex h-full w-full items-center justify-center rounded-full bg-white text-pink-600 font-semibold">
-                  {getInitials(patientName)} {/* avatar */}
+                  {patient.profile?.avatarUrl} {/* avatar */}
                 </div>
               </div>
               <div className="text-white flex-1">
-                <h3 className="font-semibold text-lg">{patientName}</h3>
+                <h3 className="font-semibold text-lg">{patient.profile ? ConvertFullName(patient.profile) : ""}</h3>
               </div>
             </>
           )}
@@ -91,60 +82,60 @@ export function SideBarPatient({
             </div>
           )}
           <nav className={`${sidebarCollapsed ? "px-2" : "px-4"} space-y-1`}>
-            <a
-              href="#"
+            <Link
+              to="/profile"
               className={`flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ${
                 sidebarCollapsed ? "justify-center" : ""
               }`}
             >
               <HomeIcon className="w-5 h-5 flex-shrink-0" />
               {!sidebarCollapsed && <span>Hồ sơ</span>}
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/progress/me"
               className={`flex items-center gap-3 px-3 py-2 text-pink-600 bg-pink-50 rounded-lg ${
                 sidebarCollapsed ? "justify-center" : ""
               }`}
             >
               <HeartIconSolid className="w-5 h-5 flex-shrink-0" />
               {!sidebarCollapsed && <span>Tiến trinh điều trị</span>}
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/appointment/me"
               className={`flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ${
                 sidebarCollapsed ? "justify-center" : ""
               }`}
             >
               <CalendarIcon className="w-5 h-5 flex-shrink-0" />
               {!sidebarCollapsed && <span>Lịch hẹn</span>}
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/change-password"
               className={`flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ${
                 sidebarCollapsed ? "justify-center" : ""
               }`}
             >
               <KeyIcon className="w-5 h-5 flex-shrink-0" />
               {!sidebarCollapsed && <span>Đổi mật khẩu</span>}
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/prescription/me"
               className={`flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ${
                 sidebarCollapsed ? "justify-center" : ""
               }`}
             >
               <DocumentTextIcon className="w-5 h-5 flex-shrink-0" />
               {!sidebarCollapsed && <span>Đơn thuốc</span>}
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="/payment/history"
               className={`flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors ${
                 sidebarCollapsed ? "justify-center" : ""
               }`}
             >
               <CreditCardIcon className="w-5 h-5 flex-shrink-0" />
               {!sidebarCollapsed && <span>Lịch sử thanh toán</span>}
-            </a>
+            </Link>
           </nav>
 
           {!sidebarCollapsed && (
@@ -153,27 +144,27 @@ export function SideBarPatient({
                 Hỗ trợ & tài nguyên
               </div>
               <nav className="space-y-1">
-                <a
-                  href="#"
+                <Link
+                  to="/support"
                   className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <ChatBubbleLeftRightIcon className="w-5 h-5" />
                   <span>Hỗ trợ</span>
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  to="/explore/our"
                   className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <BookOpenIcon className="w-5 h-5" />
                   <span>Tìm hiểu thêm</span>
-                </a>
-                <a
-                  href="#"
+                </Link>
+                <Link
+                  to="/emergency-contact"
                   className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <PhoneIcon className="w-5 h-5" />
                   <span>Liên lạc khẩn cấp</span>
-                </a>
+                </Link>
               </nav>
             </div>
           )}
