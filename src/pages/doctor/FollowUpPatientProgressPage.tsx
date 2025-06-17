@@ -70,10 +70,10 @@ export default function FollowUpPatientProgressPage() {
     useState<CreateAppointmentDailyRequest>({
       patientId: "",
       doctorId: "",
-      doctorScheduleId: -1,
-      orderStepId: -1,
+      doctorScheduleId: 0,
+      orderStepId: 0,
       type: "",
-      extraFee: -1,
+      extraFee: 0,
       note: "",
       date: "",
     });
@@ -90,7 +90,7 @@ export default function FollowUpPatientProgressPage() {
     };
 
     fetchOrderSteps(orderId);
-  });
+  }, [orderId]);
 
   useEffect(() => {
     const fetchPatient = async (patientId: string) => {
