@@ -2,10 +2,6 @@ import { GoogleLoginButton } from "../../components/auth/GoogleLoginButton";
 import { LoginForm } from "../../components/auth/LoginForm";
 import "../../assets/css/LoginPageStyle.css";
 export default function LoginPage() {
-
-
-
-
   return (
     <div className="min-h-screen flex items-center justify-center p-6 relative">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -109,10 +105,8 @@ export default function LoginPage() {
                   Vào tài khoản FertilityCare+ của bạn
                 </p>
               </div>
-              <div className="lg:w-1/2 w-full max-w-md p-8 bg-white rounded-3xl shadow-lg glass-effect z-10">
-                <LoginForm />
-                <GoogleLoginButton />
-              </div>
+              <LoginForm />
+              <GoogleLoginButton />
             </div>
           </div>
         </div>

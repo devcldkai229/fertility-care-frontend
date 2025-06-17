@@ -1,20 +1,22 @@
 import {
   GoogleLogin,
   GoogleOAuthProvider,
-  type CredentialResponse,
+  type GoogleCredentialResponse,
 } from "@react-oauth/google";
 import { useAuth } from "../../contexts/AuthContext";
 import axiosInstance from "../../apis/AxiosInstance";
 import Swal from "sweetalert2";
-import { GOOGLE_CLIENT_ID } from "../../constants/SecretConstant";
 
 export const GoogleLoginButton = () => {
   const { login } = useAuth();
 
-  const handleSuccess = async (credentialResposne: CredentialResponse) => {
+  const handleSuccess = async (
+    credentialResponse: GoogleCredentialResponse
+  ) => {
     try {
+      console.log(credentialResponse);
       const res = await axiosInstance.post("/auth/google-login", {
-        idToken: credentialResposne.credential,
+        idToken: credentialResponse.credential,
       });
 
       const { accessToken } = res.data;
@@ -29,12 +31,14 @@ export const GoogleLoginButton = () => {
   };
 
   return (
-    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+    <>
       <div className="my-4 text-center text-sm text-gray-500">Hoặc</div>
-      <GoogleLogin
-        onSuccess={handleSuccess}
-        onError={() => console.log("Google login thất bại")}
-      ></GoogleLogin>
-    </GoogleOAuthProvider>
+      <GoogleOAuthProvider clientId="104203791937-kcoraa38rte493rkn4f3thdic5u3c981.apps.googleusercontent.com">
+        <GoogleLogin
+          onSuccess={handleSuccess}
+          onError={() => console.log("Google login thất bại")}
+        ></GoogleLogin>
+      </GoogleOAuthProvider>
+    </>
   );
 };
