@@ -15,6 +15,7 @@ import PartTwoBooking from "../../components/order/PartTwoBooking";
 import PartThreeBooking from "../../components/order/PartThreeBooking";
 import PartFourBooking from "../../components/order/PartFourBooking";
 import { useAuth } from "../../contexts/AuthContext";
+import axiosInstance from "../../apis/AxiosInstance";
 
 type CreateOrderRequest = {
   firstName?: string;
@@ -51,50 +52,16 @@ export const defaultPersonalInfo: PersonalInfo = {
   address: "",
 };
 
-export const handleBookingForm = async (
-  e: FormEvent<HTMLFormElement>,
-  formData: CreateOrderRequest
-) => {
-  e.preventDefault();
-
-  try {
-    const response = await axios.post(
-      "https://localhost:7201/api/v1/orders",
-      formData
-    );
-    console.log(response.data);
-
-    Swal.fire({
-      title: "Thành công!",
-      text: "Bạn đã đặt lịch khám thành công.",
-      icon: "success",
-      confirmButtonText: "OK",
-    });
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Lỗi API:", error.response?.data || error.message);
-    } else {
-      console.error("Lỗi không xác định:", error);
-
-      Swal.fire({
-        title: "Lỗi!",
-        text: "Có lỗi không xác định xảy ra.",
-        icon: "error",
-        confirmButtonText: "Đóng",
-      });
-    }
-  }
-};
-
 export default function BookingPage() {
-  const { userProfileId } = useAuth();
+  const { userProfileId, setPatientInfo } = useAuth();
   const [activeStep, setActiveStep] = useState(1);
   const [selectedTreatment, setSelectedTreatment] = useState("");
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedSchedule, setSelectedSchedule] = useState<number>(0);
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfo>(defaultPersonalInfo);
+  const [personalInfo, setPersonalInfo] =
+    useState<PersonalInfo>(defaultPersonalInfo);
   const [specialRequests, setSpecialRequests] = useState("");
   const [consentGiven, setConsentGiven] = useState(false);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -168,6 +135,59 @@ export default function BookingPage() {
     }
   };
 
+  const handleBookingForm = async (
+    e: FormEvent<HTMLFormElement>,
+    formData: CreateOrderRequest
+  ) => {
+    e.preventDefault();
+    console.log("Submitting form data:", formData);
+
+    try {
+      const response = await axios.post(
+        "https://localhost:7201/api/v1/orders",
+        formData
+      );
+
+      const info = await axiosInstance.get(`/patients/profile/${userProfileId}`);
+      const res2 =  info.data.data;
+      console.log("res2", res2);
+      setPatientInfo(res2.patientId, res2.orderIds);
+      
+      console.log(response.data);
+
+      Swal.fire({
+        title: "Thành công!",
+        text: "Bạn đã đặt lịch khám thành công.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      console.log(error);
+
+      const info = await axiosInstance.get(`/patients/profile/${userProfileId}`);
+      const res2 =  info.data.data;
+      console.log("res2", res2);
+      setPatientInfo(res2.patientId, res2.orderIds);
+      // if (axios.isAxiosError(error)) {
+      //   console.error("Lỗi API:", error.response?.data || error.message);
+
+      //   Swal.fire({
+      //     title: "Lỗi!",
+      //     text: error.response?.data?.message ?? "Gửi yêu cầu không hợp lệ.",
+      //     icon: "error",
+      //     confirmButtonText: "Đóng",
+      //   });
+      // }
+
+      // Swal.fire({
+      //   title: "Lỗi!",
+      //   text: "Có lỗi không xác định xảy ra.",
+      //   icon: "error",
+      //   confirmButtonText: "Đóng",
+      // });
+    }
+  };
+
   const handleTreatmentSelect = (treatment: string) => {
     setSelectedTreatment(treatment);
     if (activeStep < 2) setActiveStep(2);
@@ -220,7 +240,7 @@ export default function BookingPage() {
       partnerFullName: personalInfo.partnerName,
       partnerEmail: personalInfo.partnerEmail,
       partnerPhone: personalInfo.partnerPhone,
-      userProfileId: "BAB3402F-ECDE-4F75-AB59-220F35E5EEE6",
+      userProfileId: userProfileId,
       doctorId: selectedDoctor?.id || "",
       doctorScheduleId: selectedSchedule,
       treatmentServiceId: selectedTreatment,

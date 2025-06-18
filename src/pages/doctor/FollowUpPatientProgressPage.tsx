@@ -19,26 +19,30 @@ import {
 
 import type OrderStep from "../../models/OrderStep";
 import {
-  CalAverageCompletedOrderSteps,
+  calculateCompletedPercentage,
   ConvertFullName,
   ConvertSlotTime,
   getStepBySelectedStepDetail,
   getStepCardBg,
 } from "../../functions/CommonFunction";
-import { getOrderSteps } from "../../apis/ProgressService";
 import {
   STEP_COMPLETED,
   STEP_FAILED,
+  STEP_PLANNED,
   STEP_PROGRESS,
 } from "../../constants/StepStatus";
 import axios from "axios";
 import type { Patient } from "../../models/Patient";
 import type { SlotSchedule } from "../../models/SlotSchedule";
-import { FaClock } from "react-icons/fa";
 import { getScheduleSlotTime } from "../../apis/DoctorService";
 import Swal from "sweetalert2";
 import { getPatientById } from "../../apis/PatientService";
 import { PAYMENT_COMPLETED } from "../../constants/PaymentStatus";
+import { useLocation } from "react-router-dom";
+import axiosInstance from "../../apis/AxiosInstance";
+import { FaClock } from "react-icons/fa";
+import { STEP_TAKE_EGG } from "../../constants/IVFConstant";
+import { CubeIcon } from "@heroicons/react/24/solid";
 
 export interface CreateAppointmentDailyRequest {
   patientId: string;
@@ -51,25 +55,30 @@ export interface CreateAppointmentDailyRequest {
   date: string;
 }
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 export default function FollowUpPatientProgressPage() {
-  const [orderId, setOrderId] = useState("");
+  const query = useQuery();
+  const patientId = query.get("patientId") ?? "";
+  const orderIds = query.get("orderId") ?? "";
 
+  const [orderId, setOrderId] = useState(orderIds);
   const [patient, setPatient] = useState<Patient>();
-
   const [orderSteps, setOrderSteps] = useState<OrderStep[]>([]);
-
   const [showAppointmentForm, setShowAppointmentForm] = useState(false);
-
   const [timeSlots, setTimeSlots] = useState<SlotSchedule[]>([]);
-
   const [selectedTime, setSelectedTime] = useState("");
-
-  const [selectedStepDetail, setSelectedStepDetail] = useState<number | null>();
+  const [selectedStepDetail, setSelectedStepDetail] = useState<number | null>(
+    null
+  );
+  const [totalEgg, setTotalEgg] = useState<number>(0);
 
   const [newAppointment, setNewAppointment] =
     useState<CreateAppointmentDailyRequest>({
-      patientId: "",
-      doctorId: "",
+      patientId: patientId,
+      doctorId: "46BA90E4-C329-43DE-AC0C-F799822A5494", // Default doctor ID
       doctorScheduleId: 0,
       orderStepId: 0,
       type: "",
@@ -78,12 +87,13 @@ export default function FollowUpPatientProgressPage() {
       date: "",
     });
 
+  // Fetch order steps
   useEffect(() => {
     const fetchOrderSteps = async (orderId: string) => {
       try {
-        const result = await getOrderSteps(orderId);
-
-        setOrderSteps(result);
+        const result = await axiosInstance.get(`steps/${orderId}`);
+        console.log(result);
+        setOrderSteps(result.data.data);
       } catch (error) {
         console.log(error);
       }
@@ -92,37 +102,39 @@ export default function FollowUpPatientProgressPage() {
     fetchOrderSteps(orderId);
   }, [orderId]);
 
+  // Fetch patient info - Fixed dependency array
   useEffect(() => {
     const fetchPatient = async (patientId: string) => {
       try {
         const result = await getPatientById(patientId);
-
         setPatient(result);
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchPatient(patient?.id + "");
-  });
+    if (patientId) {
+      fetchPatient(patientId);
+    }
+  }, [patientId]); // Added dependency array
 
+  // Fetch time slots
   useEffect(() => {
-    const fetchOrder = async (patientId: string) => {
+    const fetchSlotTimes = async () => {
       try {
-        const result = await axios.get("https://localhost:7201/api/v1/orders", {
-          params: {
-            patientId,
-          },
-        });
-
-        setOrderId(result.data.data);
+        if (newAppointment.doctorId && newAppointment.date) {
+          const result = await getScheduleSlotTime(
+            newAppointment.doctorId,
+            newAppointment.date
+          );
+          setTimeSlots(result);
+        }
       } catch (error) {
         console.log(error);
       }
     };
-
-    fetchOrder(patient?.id + "");
-  });
+    fetchSlotTimes();
+  }, [newAppointment.date, newAppointment.doctorId]);
 
   const renderStatusBadge = (status: string) => {
     switch (status) {
@@ -176,7 +188,7 @@ export default function FollowUpPatientProgressPage() {
   const convertStepIcon = (stepOrder: number) => {
     switch (stepOrder) {
       case 1:
-        return <DocumentTextIcon className="h-8 w-8 text-white" />;
+        return <DocumentTextIcon className="h-8 w-7 text-white" />;
       case 2:
         return <SparklesIcon className="h-8 w-8 text-white" />;
       case 3:
@@ -198,7 +210,18 @@ export default function FollowUpPatientProgressPage() {
   ) => {
     e.preventDefault();
 
+    // // Validation
+    // if (!formData.date || !formData.type || formData.doctorScheduleId === 0) {
+    //   Swal.fire({
+    //     title: "Vui lòng điền đầy đủ thông tin",
+    //     icon: "warning",
+    //     draggable: true,
+    //   });
+    //   return;
+    // }
+
     try {
+      console.log(formData);
       const response = await axios.post(
         `https://localhost:7201/api/v1/appointments/${orderId}`,
         formData
@@ -206,34 +229,81 @@ export default function FollowUpPatientProgressPage() {
       console.log(response);
 
       Swal.fire({
-        title: "Saved appointment!",
+        title: "Lưu lịch hẹn thành công!",
         icon: "success",
         draggable: true,
       });
+
+      // Reset form and close modal
+      setShowAppointmentForm(false);
+      setNewAppointment({
+        ...newAppointment,
+        doctorScheduleId: 0,
+        orderStepId: 0,
+        type: "",
+        extraFee: 0,
+        note: "",
+        date: "",
+      });
+      setSelectedTime("");
     } catch (error) {
       console.log(error);
-      Swal.fire({
-        title: "Something is error",
-        icon: "error",
-        draggable: true,
-      });
+      // Swal.fire({
+      //   title: "Có lỗi xảy ra",
+      //   icon: "error",
+      //   draggable: true,
+      // });
     }
   };
 
-  useEffect(() => {
-    const fetchSlotTimes = async () => {
-      try {
-        const result = await getScheduleSlotTime(
-          newAppointment.doctorId,
-          newAppointment.date
-        );
-        setTimeSlots(result);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchSlotTimes();
-  }, [newAppointment.date, newAppointment.doctorId]);
+  const handleAddAppointment = (stepId: number) => {
+    setNewAppointment({
+      ...newAppointment,
+      orderStepId: stepId,
+    });
+    setShowAppointmentForm(true);
+  };
+
+  const handleMarkStatusStep = async (stepId: number, status: string) => {
+    try {
+      const response = await axiosInstance.put(
+        `/steps/${stepId}?status=${status}`
+      );
+
+      setOrderSteps((prev) => {
+        const updatedSteps = prev.map((s, index) => {
+          if (s.id === stepId) {
+            return { ...s, status: status };
+          }
+
+          const currentIndex = prev.findIndex((step) => step.id === stepId);
+          if (
+            index === currentIndex + 1 &&
+            status === STEP_COMPLETED &&
+            s.status === STEP_PLANNED
+          ) {
+            return { ...s, status: STEP_PROGRESS };
+          }
+
+          return s;
+        });
+
+        return updatedSteps;
+      });
+    } catch (error) {
+      console.error("Lỗi khi cập nhật bước:", error);
+    }
+  };
+
+  const handleAddTotalEggs = async (totalEgg: number) => {
+    try {
+      const response = await axiosInstance.put(
+        `/orders/${orderId}?totalEgg=${totalEgg}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-purple-50">
@@ -263,7 +333,11 @@ export default function FollowUpPatientProgressPage() {
           <div className="flex items-center space-x-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 text-purple-600">
               <span className="text-lg font-bold">
-                {patient?.profile?.avatarUrl}
+                <img
+                  src={patient?.profile?.avatarUrl || ""}
+                  alt=""
+                  className="rounded-full"
+                />
               </span>
             </div>
             <div>
@@ -289,18 +363,18 @@ export default function FollowUpPatientProgressPage() {
                 Đã hoàn thành{" "}
                 {orderSteps.filter((x) => x.status === STEP_COMPLETED).length}/
                 {orderSteps.length} bước (
-                {CalAverageCompletedOrderSteps(orderSteps)})
+                {calculateCompletedPercentage(orderSteps)}%)
               </p>
             </div>
             <div className="text-3xl font-bold text-purple-600">
-              {CalAverageCompletedOrderSteps(orderSteps)}
+              {calculateCompletedPercentage(orderSteps)}%
             </div>
           </div>
 
           {/* Progress steps */}
           <div className="mt-8">
             <div className="flex items-center justify-between">
-              {orderSteps.map((step) => (
+              {orderSteps.map((step, index) => (
                 <div key={step.id} className="flex flex-col items-center">
                   <div
                     className={`flex h-12 w-12 items-center justify-center rounded-full text-white ${
@@ -316,7 +390,7 @@ export default function FollowUpPatientProgressPage() {
                     {step.status === STEP_COMPLETED ? (
                       <CheckIcon className="h-6 w-6" />
                     ) : (
-                      <span>{step.id}</span>
+                      <span>{index + 1}</span>
                     )}
                   </div>
                   <span className="mt-2 text-sm">
@@ -330,7 +404,7 @@ export default function FollowUpPatientProgressPage() {
               <div
                 className="absolute top-1/2 h-1 -translate-y-1/2 transform bg-green-500"
                 style={{
-                  width: Math.floor(CalAverageCompletedOrderSteps(orderSteps)),
+                  width: Math.floor(calculateCompletedPercentage(orderSteps)),
                 }}
               ></div>
             </div>
@@ -340,90 +414,141 @@ export default function FollowUpPatientProgressPage() {
         {/* Treatment steps */}
         <div className="space-y-4">
           {orderSteps.map((step) => (
-            <div
-              key={step.id}
-              className={`cursor-pointer rounded-lg border border-transparent ${getStepCardBg(
-                step.status + ""
-              )} p-5 shadow-sm transition-all duration-200 hover:shadow-md hover:ring-2 hover:ring-purple-500`}
-              onClick={() =>
-                typeof step.id === "number"
-                  ? setSelectedStepDetail(step.id)
-                  : undefined
-              }
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex space-x-4">
-                  {renderStepIcon(step)}
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <h3 className="text-lg font-semibold">
-                        {step.treatmentStep.stepName}
-                      </h3>
-                      {renderStatusBadge(step.status + "")}
-                    </div>
-                    <p className="mt-1 text-gray-600">
-                      {step.treatmentStep.description}
-                    </p>
-
-                    {/* Thời gian */}
-                    <div className="mt-3 flex items-center space-x-1 text-sm text-gray-500">
-                      <ClockIcon className="h-4 w-4" />
-                      <span>{step.treatmentStep.estimatedDurationDays}</span>
-                    </div>
-
-                    {/* Ngày hoàn thành */}
-                    {step.endDate && (
-                      <div className="mt-1 flex items-center space-x-1 text-sm text-green-600">
-                        <CheckIcon className="h-4 w-4" />
-                        <span>Hoàn thành {step.endDate}</span>
+            <div key={step.id}>
+              <div
+                className={`cursor-pointer rounded-lg border border-transparent ${getStepCardBg(
+                  step.status + ""
+                )} p-5 shadow-sm transition-all duration-200 hover:shadow-md hover:ring-2 hover:ring-purple-500`}
+                onClick={() =>
+                  typeof step.id === "number"
+                    ? setSelectedStepDetail(step.id)
+                    : undefined
+                }
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex space-x-4">
+                    <div>{renderStepIcon(step)}</div>
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <h3 className="text-lg font-semibold">
+                          {step.treatmentStep.stepName}
+                        </h3>
+                        {renderStatusBadge(step.status + "")}
                       </div>
-                    )}
+                      <p className="mt-1 text-gray-600">
+                        {step.treatmentStep.description}
+                      </p>
 
-                    {/* Chi phí và trạng thái thanh toán */}
-                    <div className="mt-2 flex items-center space-x-2">
-                      <CreditCardIcon className="h-4 w-4 text-gray-500" />
-                      <span className="text-sm font-medium">
-                        {step.treatmentStep.amount}
-                      </span>
-                      {step.paymentStatus === PAYMENT_COMPLETED ? (
-                        <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
-                          Đã thanh toán
-                        </span>
-                      ) : (
-                        <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-800">
-                          Chưa thanh toán
-                        </span>
+                      {/* Thời gian */}
+                      <div className="mt-3 flex items-center space-x-1 text-sm text-gray-500">
+                        <ClockIcon className="h-4 w-4" />
+                        <span>{step.treatmentStep.estimatedDurationDays}</span>
+                      </div>
+
+                      {/* Ngày hoàn thành */}
+                      {step.endDate && (
+                        <div className="mt-1 flex items-center space-x-1 text-sm text-green-600">
+                          <CheckIcon className="h-4 w-4" />
+                          <span>Hoàn thành {step.endDate}</span>
+                        </div>
                       )}
+
+                      {/* Chi phí và trạng thái thanh toán */}
+                      <div className="mt-2 flex items-center space-x-2">
+                        <CreditCardIcon className="h-4 w-4 text-gray-500" />
+                        <span className="text-sm font-medium">
+                          {step.treatmentStep.amount}
+                        </span>
+                        {step.paymentStatus === PAYMENT_COMPLETED ? (
+                          <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs text-green-800">
+                            Đã thanh toán
+                          </span>
+                        ) : (
+                          <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs text-orange-800">
+                            Chưa thanh toán
+                          </span>
+                        )}
+                      </div>
+                      {step.treatmentStep.stepOrder == STEP_TAKE_EGG &&  
+                      <div className="mt-3 flex items-center space-x-1 text-sm text-gray-500">
+                        <CubeIcon className="h-4 w-4 text-red-500" />
+                        <span>{totalEgg}</span>
+                      </div>
+                      }
+                    </div>
+                  </div>
+
+                  {/* Notification badge */}
+                  <div className="relative">
+                    <div className="rounded-full bg-orange-500 p-2 text-white">
+                      <BellIcon className="h-5 w-5" />
+                      <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white ring-2 ring-white">
+                        {step.appointments?.length}
+                      </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Notification badge */}
-                <div className="relative">
-                  <div className="rounded-full bg-orange-500 p-2 text-white">
-                    <BellIcon className="h-5 w-5" />
-                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs font-bold text-white ring-2 ring-white">
-                      {step.appointments?.length}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action buttons - only visible for doctor */}
-              <div className="mt-4 flex justify-end space-x-3">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setShowAppointmentForm(true);
-                  }}
-                  className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium transition-colors hover:bg-gray-100"
-                >
-                  Thêm lịch hẹn
-                </button>
-                <div className="flex space-x-1">
+                {/* Action buttons - only visible for doctor */}
+                <div className="mt-4 flex justify-end space-x-3">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
+                      if (typeof step.id === "number") {
+                        handleAddAppointment(step.id);
+                      }
+                    }}
+                    className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium transition-colors hover:bg-gray-100"
+                  >
+                    Thêm lịch hẹn
+                  </button>
+                  <div className="flex space-x-1">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (typeof step.id === "number") {
+                          handleMarkStatusStep(step.id, STEP_COMPLETED);
+                        }
+                      }}
+                      className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                        step.status === STEP_COMPLETED
+                          ? "bg-green-600 text-white hover:bg-green-700"
+                          : "border border-green-600 text-green-600 hover:bg-green-100"
+                      }`}
+                    >
+                      Hoàn thành
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (typeof step.id === "number") {
+                          handleMarkStatusStep(step.id, STEP_FAILED);
+                        }
+                      }}
+                      className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                        step.status === STEP_FAILED
+                          ? "bg-red-600 text-white hover:bg-red-700"
+                          : "border border-red-600 text-red-600 hover:bg-red-100"
+                      }`}
+                    >
+                      Thất bại
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {step.treatmentStep.stepOrder == STEP_TAKE_EGG && (
+                <div>
+                  <label htmlFor="Nhập số trứng">
+                    <input
+                      type="number"
+                      value={totalEgg}
+                      onChange={(e) => setTotalEgg(Number(e.target.value))}
+                      placeholder="Nhập số trứng..."
+                    />
+                  </label>
+                  <button
+                    onClick={() => {
+                      handleAddTotalEggs(totalEgg);
                     }}
                     className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
                       step.status === STEP_COMPLETED
@@ -431,22 +556,10 @@ export default function FollowUpPatientProgressPage() {
                         : "border border-green-600 text-green-600 hover:bg-green-100"
                     }`}
                   >
-                    Hoàn thành
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
-                    className={`rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                      step.status === STEP_FAILED
-                        ? "bg-red-600 text-white hover:bg-red-700"
-                        : "border border-red-600 text-red-600 hover:bg-red-100"
-                    }`}
-                  >
-                    Thất bại
+                    Cập nhật
                   </button>
                 </div>
-              </div>
+              )}
             </div>
           ))}
         </div>
@@ -755,11 +868,11 @@ export default function FollowUpPatientProgressPage() {
                     }
                     className="w-full rounded-md border border-gray-300 p-2 text-sm"
                   >
-                    <option value="none">-- Chọn loại cuộc hẹn --</option>
-                    <option value="consultation">Tư vấn</option>
-                    <option value="check">Kiểm tra</option>
-                    <option value="treatment">Điều trị</option>
-                    <option value="follow-up">Theo dõi</option>
+                    <option value="None">-- Chọn loại cuộc hẹn --</option>
+                    <option value="InitialConsultation">Tư vấn</option>
+                    <option value="Check">Kiểm tra</option>
+                    <option value="Treatment">Điều trị</option>
+                    <option value="FollowUp">Theo dõi</option>
                   </select>
                 </div>
                 <div>
@@ -792,7 +905,6 @@ export default function FollowUpPatientProgressPage() {
                     }
                     className="w-full rounded-md border border-gray-300 p-2 text-sm"
                     placeholder="Ghi chú thêm"
-                    rows={2}
                   />
                 </div>
                 <div className="flex justify-end space-x-2 pt-2">

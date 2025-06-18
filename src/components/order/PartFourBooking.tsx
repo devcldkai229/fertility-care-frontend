@@ -103,7 +103,7 @@ export default function PartFourBooking({
               {selectedDate ? (
                 <div className="grid grid-cols-3 gap-2">
                   {timeSlots.map((slot) => (
-                    <button
+                    <div
                       key={slot.slotId}
                       onClick={() => {
                         onTimeChange(ConvertSlotTime(slot));
@@ -117,7 +117,7 @@ export default function PartFourBooking({
                     >
                       <FaClock className="w-3 h-3 mr-1" />
                       {ConvertSlotTime(slot)}
-                    </button>
+                    </div>
                   ))}
                 </div>
               ) : (

@@ -40,11 +40,11 @@ export function SideBarPatient({
             <>
               <div className="relative flex h-12 w-12 shrink-0 overflow-hidden rounded-full border-2 border-white">
                 <div className="flex h-full w-full items-center justify-center rounded-full bg-white text-pink-600 font-semibold">
-                  {patient.profile?.avatarUrl} {/* avatar */}
+                  {patient?.profile?.avatarUrl} {/* avatar */}
                 </div>
               </div>
               <div className="text-white flex-1">
-                <h3 className="font-semibold text-lg">{patient.profile ? ConvertFullName(patient.profile) : ""}</h3>
+                <h3 className="font-semibold text-lg">{patient?.profile ? ConvertFullName(patient.profile) : ""}</h3>
               </div>
             </>
           )}

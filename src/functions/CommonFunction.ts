@@ -15,11 +15,13 @@ export function ConvertSlotTime(slot: SlotSchedule): string {
   return slot.startTime + " - " + slot.endTime;
 }
 
-export function CalAverageCompletedOrderSteps(steps: OrderStep[]): number {
-  if (steps.length === 0) return 0;
-  const progress = steps.filter((x) => x.status === STEP_COMPLETED).length;
-  return (progress / steps.length)*100;
-}
+export const calculateCompletedPercentage = (steps: OrderStep[]): number => {
+  if (!steps || steps.length === 0) return 0;
+  const completedCount = steps.filter((step) => step.status === STEP_COMPLETED).length;
+  const percentage = (completedCount / steps.length) * 100;
+  return Math.floor(percentage); 
+};
+
 
 export function getStepCardBg(status: string): string {
   switch (status) {

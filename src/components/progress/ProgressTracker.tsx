@@ -56,7 +56,7 @@ export function ProgressTracker({
                   {step.status === STEP_COMPLETED ? (
                     <CheckCircleIcon className="w-6 h-6" />
                   ) : (
-                    step.id
+                    index+1
                   )}
                 </div>
 

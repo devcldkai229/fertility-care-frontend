@@ -33,17 +33,17 @@ export const renderIconByStep = (step: OrderStep) => {
   const stepOrder = step.treatmentStep.stepOrder;
   switch (stepOrder) {
     case 1:
-      return <DocumentTextIcon />;
+      return <DocumentTextIcon className="w-7"/>;
     case 2:
-      return <SparklesIcon />;
+      return <SparklesIcon className="w-7"/>;
     case 3:
-      return <EyeDropperIcon />;
+      return <EyeDropperIcon className="w-7" />;
     case 4:
-      return <BeakerIcon />;
+      return <BeakerIcon className="w-7" />;
     case 5:
-      return <HeartIcon />;
+      return <HeartIcon className="w-7" />;
     case 6:
-      return <ClockIcon />;
+      return <ClockIcon className="w-7" />;
   }
 };
 

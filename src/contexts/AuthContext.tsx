@@ -6,9 +6,9 @@ interface AuthContextType {
   logout: () => void;
   patientId?: string | null;
   userProfileId: string;
-  orderIds?: string[] | null;
+  orderIds?: string | null;
   isAuthenticated: boolean;
-  setPatientInfo: (patientId: string, orderIds: string[]) => void;
+  setPatientInfo: (patientId: string, orderIds: string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,9 +30,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return localStorage.getItem("patientId");
   });
 
-  const [orderIds, setOrderIds] = useState<string[] | null>(() => {
-    const raw = localStorage.getItem("orderIds");
-    return raw ? JSON.parse(raw) : null;
+  const [orderIds, setOrderIds] = useState<string | null>(() => {
+    return localStorage.getItem("orderIds");
   });
 
   const login = (newToken: string, userProfileId: string) => {
@@ -52,12 +51,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsAuthenticated(false);
   };
 
-  const setPatientInfo = (pId: string, oId: string[]) => {
+  const setPatientInfo = (pId: string, oId: string) => {
+    console.log(" setPatientInfo called with:", pId, oId)
     setPatientId(pId);
     setOrderIds(oId);
     localStorage.setItem("patientId", pId);
     if (oId) {
-      localStorage.setItem("orderIds", oId[0]);
+      localStorage.setItem("orderIds", oId);
     }
   };
 

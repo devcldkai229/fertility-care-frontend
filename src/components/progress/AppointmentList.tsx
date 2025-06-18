@@ -88,7 +88,7 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
               >
                 <div className="flex items-center justify-between">
                   <h4 className="font-medium text-gray-900">
-                    {appointment.type}
+                    {appointment.type == "InitialConsultation" ? "Khám ban đầu" : ""}
                   </h4>
                   {getAppointmentStatusBadge(appointment.status ?? "")}
                 </div>
@@ -119,7 +119,7 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
                   </div>
                 </div>
 
-                {appointment.extraFee && (
+                { (
                   <div className="bg-green-50 p-3 rounded border-l-4 border-green-400">
                     <div className="flex items-center gap-2 mb-1">
                       <BanknotesIcon className="h-5 w-5 text-green-600" />
@@ -134,8 +134,8 @@ export function AppointmentList({ appointments }: AppointmentListProps) {
                   </div>
                 )}
 
-                {appointment.note && (
-                  <div className="bg-gray-50 p-3 rounded text-sm text-gray-700">
+                { (
+                  <div className="bg-gray-100 p-3 rounded text-sm text-gray-700">
                     <strong>Ghi chú:</strong> {appointment.note}
                   </div>
                 )}

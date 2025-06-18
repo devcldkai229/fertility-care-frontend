@@ -19,11 +19,13 @@ export const LoginForm = () => {
       });
 
       const { accessToken, user } = res.data;
+      console.log(user);
       login(accessToken, user.profileId);
 
-      const info = await axiosInstance.post("/patients/me");
-      const { data } = info.data;
-      setPatientInfo(data.PatientId, data.OrderIds);
+      const info = await axiosInstance.get(`/patients/profile/${user.profileId}`);
+      const res2 =  info.data.data;
+      console.log("res2", res2);
+      setPatientInfo(res2.patientId, res2.orderIds);
 
       Swal.fire({
         title: "Đăng nhập thành công",

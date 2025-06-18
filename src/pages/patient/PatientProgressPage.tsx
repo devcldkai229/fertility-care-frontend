@@ -17,7 +17,7 @@ export default function PatientProgressPage() {
   const [selectedStep, setSelectedStep] = useState<OrderStep | null>();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [steps, setSteps] = useState<OrderStep[]>([]);
-  const [patient, setPatient] = useState<Patient | null>(null);
+  const [patient, setPatient] = useState<Patient>();
   const [order, setOrder] = useState<Order>();
 
   const completedSteps = steps.filter(
@@ -27,13 +27,12 @@ export default function PatientProgressPage() {
   const totalSteps = steps.length;
 
   useEffect(() => {
-    if (!patientId || !orderIds || orderIds.length === 0) return;
 
     const fetchSteps = async () => {
       try {
-        const response = await axiosInstance.get(`/steps/${orderIds[0]}`);
+        const response = await axiosInstance.get(`/steps/${orderIds}`);
 
-        const result = response.data;
+        const result = response.data.data;
         setSteps(result);
       } catch (error) {
         console.log(error);
@@ -44,24 +43,23 @@ export default function PatientProgressPage() {
   }, [patientId, orderIds]);
 
   useEffect(() => {
-    if (!patientId) return;
 
-    const fetchPatient = async () => {
+    const fetchPatient = async (pId: string) => {
       try {
-        const response = await axiosInstance.get(`/patients/${patientId}`);
+        const response = await axiosInstance.get(`/patients/${pId}`);
 
         const result = response.data.data;
+        console.log("Patient" + result);
         setPatient(result);
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchPatient();
-  }, [patientId]);
+    fetchPatient(patientId??"" );
+  });
 
   useEffect(() => {
-    if (!orderIds) return;
 
     const fetchOrder = async () => {
       try {
@@ -75,13 +73,13 @@ export default function PatientProgressPage() {
     };
 
     fetchOrder();
-  }, [patientId, orderIds]);
+  });
 
   return (
     <div>
       <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 flex">
         {/* Sidebar */}
-        {sidebarOpen && <SideBarPatient patient={patient} />}
+        {sidebarOpen && <SideBarPatient patient={patient ?? null} />}
 
         {/* Mobile sidebar overlay */}
         {sidebarOpen && (

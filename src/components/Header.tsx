@@ -2,7 +2,8 @@ import { useAuth } from "../contexts/AuthContext";
 import Button from "./Button";
 
 export default function Header() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, userProfileId } = useAuth();
+
 
   return (
     <div className="relative px-12 h-20 bg-white shadow-md border-b border-gray-100">
@@ -91,14 +92,16 @@ export default function Header() {
             </div>
 
             {/* Xin chào - Name*/}
-            <div className="flex flex-col">
-              <span className="text-xs text-gray-500 font-medium">
-                Xin chào,
-              </span>
-              <span className="text-sm font-semibold text-gray-800 group-hover:text-purple-700 transition-colors">
-                Nguyễn Thị Mai
-              </span>
-            </div>
+            {isAuthenticated && (
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-500 font-medium">
+                  Xin chào,
+                </span>
+                <span className="text-sm font-semibold text-gray-800 group-hover:text-purple-700 transition-colors">
+                  Nguyễn Thị Mai
+                </span>
+              </div>
+            )}
           </div>
 
           {/* | */}
@@ -110,7 +113,7 @@ export default function Header() {
             variant="solid"
             color="primary"
             size="md"
-            href="/service"
+            href="/order"
           />
         </div>
       </div>
